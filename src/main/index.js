@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron');
-const isDev = require('electron-is-dev');
-const path = require('path');
+import { electron, app, BrowserWindow, Menu } from "electron";
+import isDev from 'electron-is-dev';
+import path from 'path';
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow

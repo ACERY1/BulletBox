@@ -12,6 +12,9 @@
 /build
 /dist
 
+# electron webpack file
+/public/electron.js
+
 # misc
 .DS_Store
 .env.local
