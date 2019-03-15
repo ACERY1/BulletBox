@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
 import './App.less';
+import Banner from '@components/Banner';
+
+const logoImg = require('@assets/logo.png');
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <header className="App-header">
-        <Button type="primary">Button</Button>
-          <h1><span role="img">😂</span></h1>
+          <Banner/>
+          <h1 className="App-h1">Bullet Box</h1>
+          <Button type="primary">Boom!</Button>
           <ul>
             <li>CRA Ready</li>
             <li>AntD Support</li>
