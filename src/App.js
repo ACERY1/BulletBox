@@ -16,7 +16,8 @@ class App extends Component {
             <li>Less Support</li>
             <li>Electron Dev Mode</li>
             <li>Electron Build Config</li>
-            <li>Hot Reload While Developing?</li>
+            <li>Hot Reload While Developing Main Process</li>
+            <li>Hot Reload While Developing Render Process</li>
           </ul>
         </header>
       </div>

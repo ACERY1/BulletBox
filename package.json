@@ -10,6 +10,7 @@
     "antd": "^3.15.0",
     "babel-plugin-import": "^1.11.0",
     "babel-polyfill": "^6.26.0",
+    "chalk": "^2.4.2",
     "electron-is-dev": "^1.0.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
@@ -17,17 +18,20 @@
   },
   "scripts": {
     "web-dev": "react-app-rewired start",
-    "electron-web-dev":  "concurrently --names \"electron-webpack,react,electron\" -c  \"green.bold,blue.bold,cyan.bold\" \"yarn main-build\" \"BROWSER=none yarn web-dev\" \"wait-on http://localhost:3000 && electron . \"",
+    "electron-web-dev": "concurrently --names \"electron-webpack,react,electron\" -c  \"green.bold,blue.bold,cyan.bold\" \"yarn main-build\" \"BROWSER=none yarn web-dev\" \"wait-on http://localhost:3000 && cross-env DEV_ENV=devRender electron . \"",
     "electron-main-dev": "yarn build && nodemon --watch src/main --watch src/shared --exec './node_modules/.bin/npm run main-build-run' ",
     "main-build": "webpack --hide-modules --config webpack/main.conf.js",
-    "main-build-run": "yarn main-build && electron .",
-    "electron-dev": "concurrently --names \"electron-webpack,react,electron\" -c  \"green.bold,blue.bold,cyan.bold\" \"yarn main-build\" \"BROWSER=none yarn web-dev\" \"wait-on http://localhost:3000 && yarn main-dev \"",
+    "main-build-run": "yarn main-build && cross-env DEV_ENV=devMain electron .",
+    "electron-dev": "concurrently --names \"electron-webpack,react,electron\" -c  \"green.bold,blue.bold,cyan.bold\" \"yarn main-build\" \"BROWSER=none yarn web-dev\" \"wait-on http://localhost:3000 && yarn demon \"",
+    "preelectron-pack": "yarn build",
     "electron-pack": "build -c.extraMetadata.main=build/electron.js",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "dist": "electron-builder --mac --x64 --dir ./dist",
-    "clear": "rm -rf ./build && rm -rf ./dist"
+    "clear": "rm -rf ./build && rm -rf ./dist",
+    "refresh": "rm -rf ./node_modules && yarn",
+    "demon": "nodemon --watch src/main --watch src/shared --exec './node_modules/.bin/npm run demon-run'",
+    "demon-run": "yarn main-build && cross-env electron ."
   },
   "eslintConfig": {
     "extends": "react-app"
