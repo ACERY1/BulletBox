@@ -7,12 +7,13 @@ import path from 'path';
 let mainWindow
 
 function createWindow () {
+  console.log('hello');
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
 
   // and load the index.html of the app.
   // mainWindow.loadFile('public/index.html')
-  mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
+  mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, './index.html')}`);
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -47,3 +48,4 @@ app.on('activate', function () {
     createWindow()
   }
 })
+
