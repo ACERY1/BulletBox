@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import './renderer/preset.css';
+import App from './renderer/App';
 import * as serviceWorker from './serviceWorker';
 
+// /src/index.js 文件必须存在，CRA强制规定
 ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

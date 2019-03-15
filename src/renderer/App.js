@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import { Button } from 'antd';
 import './App.less';
 
@@ -9,10 +8,10 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
         <Button type="primary">Button</Button>
-          <img src={logo} className="App-logo" alt="logo" />
           <h1><span role="img">😂</span></h1>
           <ul>
             <li>CRA Ready</li>
+            <li>AntD Support</li>
             <li>Less Support</li>
             <li>Electron Dev Mode</li>
             <li>Electron Build Config</li>
