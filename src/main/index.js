@@ -2,6 +2,8 @@
 import { electron, app, BrowserWindow, Menu } from "electron";
 import isElectronDev from 'electron-is-dev';
 import path from 'path';
+import mainWindowConfig from './config/mainWindow';
+import depoly from './services/deploy';
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -11,7 +13,7 @@ const isDevRender = process.env.DEV_ENV === 'devRender';
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 });
+  mainWindow = new BrowserWindow(mainWindowConfig);
 
   // 单独开发主进程，加载打包后的h5文件，electron.js在 public 文件目录里
   if (isDevMain) {
@@ -35,7 +37,7 @@ function createWindow() {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
-
+  depoly();
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows

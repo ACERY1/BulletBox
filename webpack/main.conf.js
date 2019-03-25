@@ -15,7 +15,11 @@ module.exports = {
     publicPath: "./",
   },
   resolve: {
-    extensions: [".js"]
+    extensions: [".js"],
+    // alias for Electron (Main process)
+    alias: {
+      // '@events': path.resolve(__dirname, '../src/shared/events.js')
+    }
   },
   mode: "development",
   module: {
