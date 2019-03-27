@@ -8,5 +8,3 @@ import createWinLifeCycle from './createWinLifeCycle';
 export const register = wins => {
   createWinLifeCycle(wins);
 }
-
-export const a = 3;

@@ -12,7 +12,6 @@ let wins = {
 
 
 function createWindow() {
-  // 注册
   services.register(wins);
 }
 
