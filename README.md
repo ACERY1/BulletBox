@@ -1,3 +1,10 @@
+# Bullet Box
+Your Personal Code Manager, without uploading code repeatedly, just push one key.
+
+> Attention: branch template is for developing Electron apps with React,Less,AntD.
+
+![-w600](./pictures/intro.png)
+
 ### 注意
 
 * 开发时用的 /public/electron.js，打包的时候是 /public/electron.js
