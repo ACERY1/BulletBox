@@ -1,10 +1,8 @@
 // Modules to control application life and create native browser window
 import { electron, app, BrowserWindow, Menu } from "electron";
-import isElectronDev from 'electron-is-dev';
-import path from 'path';
-import mainWindowConfig from './config/mainWindow';
-// import depoly from './services/deploy';
 import * as services from './services/index.js';
+
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected. 
 // 支持多窗口，目前只有main窗口
@@ -12,47 +10,9 @@ let wins = {
   main: null,
 };
 
-const isDevMain = process.env.DEV_ENV === 'devMain';
-const isDevRender = process.env.DEV_ENV === 'devRender';
 
 function createWindow() {
-  // // Create the browser window.
-  // mainWindow = new BrowserWindow(mainWindowConfig);
-
-  // // 单独开发主进程，加载打包后的h5文件，electron.js在 public 文件目录里
-  // if (isDevMain) {
-  //   console.log('dev main');
-  //   mainWindow.loadFile(path.join(__dirname, '../build/index.html'));
-  //   mainWindow.webContents.openDevTools();
-  // }
-  // // 单独开发H5，直接访问localhost
-  // else if (isDevRender) {
-  //   console.log('dev render');
-  //   mainWindow.loadURL('http://localhost:3000');
-  //   mainWindow.webContents.openDevTools();
-  // }
-  // // 同时开发 和 生成模式下
-  // else {
-  //   console.log('dev both or production');
-  //   if (isElectronDev) {
-  //     mainWindow.webContents.openDevTools()
-  //   }
-  //   mainWindow.loadURL(isElectronDev ? 'http://localhost:3000' : `file://${path.join(__dirname, './index.html')}`);
-  // }
-
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
-
-  // TODO: ipc事件的注册形式要改
-  // depoly();
-  // Emitted when the window is closed.
-  // mainWindow.on('closed', function () {
-  //   // Dereference the window object, usually you would store windows
-  //   // in an array if your app supports multi windows, this is the time
-  //   // when you should delete the corresponding element.
-  //   mainWindow = null
-  // })
+  // 注册
   services.register(wins);
 }
 
@@ -73,8 +33,8 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
+  // if (mainWindow === null) {
+  //   createWindow()
+  // }
 })
 
