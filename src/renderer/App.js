@@ -9,7 +9,7 @@ const logoImg = require('@assets/logo.png');
 const {ipcRenderer} = window.electron;
 class App extends Component {
   boom = () => {
-    ipcRenderer.send(EVENTS.HELLO_WORLD, 'render process message');
+    ipcRenderer.send(EVENTS.FILE_UPLOAD, 'upload file');
   }
   componentDidMount() {
     ipcRenderer.on(EVENTS.HELLO_WORLD, (event, arg)=>{

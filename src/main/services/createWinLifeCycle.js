@@ -2,6 +2,7 @@
 import { ipcMain } from "electron";
 import createMainWindow from '../windows/createMainWindow';
 import * as EVENTS from '../../shared/events';
+import { read } from '../functions/files';
 
 export default wins => {
   // 创建窗口
@@ -11,5 +12,9 @@ export default wins => {
   ipcMain.on(EVENTS.HELLO_WORLD, (event, arg) => {
     console.log('Main got message', arg);
     event.sender.send(EVENTS.HELLO_WORLD, 'main process message')
+  });
+
+  ipcMain.on(EVENTS.FILE_UPLOAD, (event, arg) => {
+    read();
   })
 }

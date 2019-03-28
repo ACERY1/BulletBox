@@ -15,8 +15,8 @@ const config = {
     // file path based on /public
     preload: path.join(__dirname, './render.js')
   },
-  width: 800,
-  height: 600
+  width: 1080,
+  height: 960
 };
 
 export default (wins) => {

@@ -4,6 +4,6 @@
 import http from 'axios';
 
 
-const uploadFile = () => {
-
+export const uploadFile = () => {
+  console.log('get upload function');
 }

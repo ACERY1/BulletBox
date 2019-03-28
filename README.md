@@ -19,5 +19,6 @@
 * main-build-run：打包主进程文件并直接运行（采用打包后的h5）
 * electron-dev：electron打开，同时开发h5和主进程
 * build：h5打包
+* electron-pack：构建安装包（需要分平台构建）
 * clear: 删除历史构建包
 * refresh: 重装依赖
