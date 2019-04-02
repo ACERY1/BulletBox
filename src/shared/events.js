@@ -7,3 +7,14 @@ export const MIN_SCREEN = "MIN_SCREEN"; // 最小化应用
 
 // 上传文件相关
 export const FILE_UPLOAD = "FILE_UPLOAD";
+
+// 新建项目
+
+// 弹框通知
+export const TOAST_MESSAGE = "TOAST_MESSAGE"; 
+export const TOAST_ERROR = "TOAST_ERROR";
+export const TOAST_WARNING = "TOAST_WARNING";
+export const TOAST_SUCCESS = "TOAST_SUCCESS";
+// export const TOAST_CONFIRM = "TOAST_CONFIRM";
+// export const TOAST_CONFIRM_YES = "TOAST_CONFIRM_YES";
+// export const TOAST_CONFIRM_NO = "TOAST_CONFIRM_NO";
