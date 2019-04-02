@@ -41,6 +41,8 @@ export default (wins) => {
     if (isElectronDev) {
       mainWin.webContents.openDevTools()
     }
+
+    //__dirname is /public
     mainWin.loadURL(isElectronDev ? 'http://localhost:3000' : `file://${path.join(__dirname, './index.html')}`);
   }
 }
