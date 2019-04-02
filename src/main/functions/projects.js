@@ -33,9 +33,7 @@ export class Project {
 export class DataBase {
   constructor() {
     this.db = new nedb({ filename: dataBasePath });
-    this._init().catch(err => {
-      console.log(err);
-    });
+    this._init();
   }
 
   /**
@@ -43,12 +41,10 @@ export class DataBase {
    * 返回实例化完成的DB对象
    */
   _init() {
-    return new Promise((resolve, reject) => {
-      this.db.loadDatabase(err => {
-        if (err) reject(err);
-        resolve();
-      });
+    this.db.loadDatabase(err => {
+      if (err) throw new Error(err);
     });
+    this.db.ensureIndex({ fieldName: "appid", unique: true });
   }
 
   /**
