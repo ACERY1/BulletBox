@@ -47,9 +47,8 @@ export default wins => {
         ? "http://localhost:3000"
         : `file://${path.join(__dirname, "./index.html")}`
     );
-
-    wins.main = mainWin;
-
-    return mainWin;
   }
+  wins.main = mainWin;
+
+  return mainWin;
 };

@@ -1,0 +1,143 @@
+/* 
+* 公用样式 公用className 
+* 字体大小 t1~t6 数字越大 字体越大
+* 字体粗细 w1~w6 数字越大 越粗
+* 字体颜色 c1~c6 数字越大 越浅
+* 边距 m10 代表margin:10px; mt10 代表 margin-top:10px; 以此类推 取值范围[5,60]
+* 边框 bdr1 代表宽度为1的边框 bdr1__ra4 代表圆角为4宽度为1的边框 ra取值4,6,8,10
+* 阴影 sdw 代表默认阴影 sdw_446 数值分别代表x轴偏移、y轴偏移、扩散度。 取值 446、046、006
+*/
+@import "./variable.less";
+
+// 字体大小
+.t1 {
+  font-size: 24px;
+}
+.t2 {
+  font-size: 20px;
+}
+.t3 {
+  font-size: 18px;
+}
+.t4 {
+  font-size: 16px;
+}
+.t5 {
+  font-size: 12px;
+}
+.t6 {
+  font-size: 10px;
+}
+
+// 字体粗细
+.w1 {
+  font-weight: 600;
+}
+.w2 {
+  font-weight: 500;
+}
+.w3 {
+  font-weight: 400;
+}
+.w4 {
+  font-weight: 300;
+}
+.w5 {
+  font-weight: 200;
+}
+.w6 {
+  font-weight: 100;
+}
+
+// 颜色
+.c1 {
+  color: @c1;
+}
+.c2 {
+  color: @c2;
+}
+.c3 {
+  color: @c3;
+}
+.c4 {
+  color: @c4;
+}
+.c5 {
+  color: @c5;
+}
+.c6 {
+  color: @c6;
+}
+
+// 边框 宽度1
+.bdr1 {
+  border: 1px solid @c4;
+}
+
+.bdr1_ra4 { // 宽度1 圆角4
+  &:extend(.bdr1);
+  border-radius: 4px;
+}
+.bdr1_ra6 {
+  &:extend(.bdr1);
+  border-radius: 6px;
+}
+.bdr1_ra8 {
+  &:extend(.bdr1);
+  border-radius: 8px;
+}
+.bdr1_ra10 {
+  &:extend(.bdr1);
+  border-radius: 10px;
+}
+
+// 阴影
+.sdw {
+  box-shadow: 4px 4px 6px @shadow;
+}
+.sdw_446 {
+  box-shadow: 4px 4px 6px @shadow;
+}
+.sdw_046 {
+  box-shadow: 0px 4px 6px @shadow;
+}
+.sdw_006 {
+  box-shadow: 0px 0px 6px @shadow;
+}
+
+// 生成5~60px的边距 className，单位长度5px
+.generate-pm(@n, @i: 1) when (@i =< @n) {
+  @tempPx: @i * 5;
+  .p@{tempPx} {
+    padding: @tempPx * 1px;
+  }
+  .pt@{tempPx} {
+    padding-top: @tempPx * 1px;
+  }
+  .pb@{tempPx} {
+    padding-bottom: @tempPx * 1px;
+  }
+  .pr@{tempPx} {
+    padding-right: @tempPx * 1px;
+  }
+  .pl@{tempPx} {
+    padding-left: @tempPx * 1px;
+  }
+  .m@{tempPx} {
+    margin: @tempPx * 1px;
+  }
+  .mt@{tempPx} {
+    margin-top: @tempPx * 1px;
+  }
+  .mb@{tempPx} {
+    margin-bottom: @tempPx * 1px;
+  }
+  .ml@{tempPx} {
+    margin-left: @tempPx * 1px;
+  }
+  .mr@{tempPx} {
+    margin-right: @tempPx * 1px;
+  }
+  .generate-pm(@n, (@i + 1)); // 递归调用自身
+}
+.generate-pm(12);

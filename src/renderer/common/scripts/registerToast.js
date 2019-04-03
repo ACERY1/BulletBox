@@ -1,7 +1,7 @@
 /**
  * 注册全局弹窗
  */
-import * as EVENTS from "../../shared/events";
+import * as EVENTS from "../../../shared/events";
 import { message } from "antd";
 const { ipcRenderer } = window.electron;
 

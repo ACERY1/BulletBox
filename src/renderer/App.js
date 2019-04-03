@@ -1,15 +1,23 @@
 import React, { Component } from "react";
-// import { ipcRenderer } from "electron";
-import * as EVENTS from "../shared/events";
-import { Button } from "antd";
+import { Button, Layout } from "antd";
+
+import "@styles/common.less";
 import "./App.less";
 
-import registerToast from "./common/registerToast";
-import Banner from "@components/Banner";
+import * as EVENTS from "../shared/events";
+import registerToast from "@scripts/registerToast";
+import ProjectListItem from "@components/ProjectListItem";
 
-const logoImg = require("@assets/logo.png");
 const { ipcRenderer } = window.electron;
+const { Sider, Content } = Layout;
+
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      list: [1, 2, 3, 4]
+    };
+  }
   boom = () => {
     ipcRenderer.send(EVENTS.FILE_UPLOAD, "upload file");
   };
@@ -17,28 +25,31 @@ class App extends Component {
     ipcRenderer.on(EVENTS.HELLO_WORLD, (event, arg) => {
       console.log("got from main", arg);
     });
-    registerToast();
+    registerToast(); // 注册Toast IPC
+  }
+
+  // 断点回调fn
+  breakCB = (point)=> {
+    console.log(point);
   }
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <Banner />
-          <h1 className="App-h1">Bullet Box</h1>
-          <Button type="primary" onClick={this.boom}>
-            Boom!
-          </Button>
-          <ul>
-            <li>CRA Ready</li>
-            <li>AntD Support</li>
-            <li>Less Support</li>
-            <li>Electron Dev Mode</li>
-            <li>Electron Build Config</li>
-            <li>Hot Reload While Developing Main Process</li>
-            <li>Hot Reload While Developing Render Process</li>
-          </ul>
-        </header>
+      <div className="app">
+        <Layout>
+          <Sider 
+          className="app-slider"
+          collapsible={true}
+          onBreakpoint={this.breakCB}
+          width="300"
+          theme="light"
+          >
+            {this.state.list.map((item, key) => (<ProjectListItem key={key}></ProjectListItem>))}
+          </Sider>
+          <Layout>
+            <Content className="app-content">Content</Content>
+          </Layout>
+        </Layout>
       </div>
     );
   }

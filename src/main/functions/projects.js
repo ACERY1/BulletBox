@@ -12,17 +12,19 @@ const dataBasePath = path.resolve(userDataPath, "projects.db");
  * @param {String} appid 项目id
  * @param {Object} servers 服务器路径键值对 {[env]:[protocol+url+port]}
  * @param {String} path 项目文件路径
+ * @param {String} desc 项目描述
  * @param ? 项目icon
  *  */
 export class Project {
-  constructor(name, appid, servers, path) {
-    if (!name || !appid || !servers || !path) {
+  constructor(name, appid, servers, path, desc) {
+    if (!name || !appid || !servers || !path || !desc) {
       throw new Error("constructor project 缺少参数");
     }
     this.name = name;
     this.appid = appid;
     this.servers = servers;
     this.path = path;
+    this.desc = desc;
   }
 
   getServerPathByEnv(env) {
