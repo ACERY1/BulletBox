@@ -8,6 +8,7 @@ const {
   addWebpackAlias
 } = require("customize-cra");
 const path = require("path");
+const less_variables = require("./src/renderer/common/styles/variables");
 
 module.exports = override(
   fixBabelImports("import", {
@@ -17,7 +18,8 @@ module.exports = override(
   }),
   addLessLoader({
     javascriptEnabled: true,
-    modifyVars: { "@primary-color": "#1DA57A" }
+    // modifyVars: { "@primary-color": "#1DA57A" }
+    modifyVars: less_variables
   }),
   // for react(render) alias
   addWebpackAlias({
