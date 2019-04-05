@@ -141,3 +141,39 @@
   .generate-pm(@n, (@i + 1)); // 递归调用自身
 }
 .generate-pm(12);
+
+
+// **盒子**
+// 横向盒子
+.rowBox {
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+}
+// 纵向盒子
+.colBox {
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+}
+// 全局中盒子：主轴纵向
+.allMidBox {
+	display: flex;
+	flex-flow: nowrap column;
+	justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+// 水平居中盒子
+.rowMidBox {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+
+// 纵向居中盒子
+.colMidBox {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
