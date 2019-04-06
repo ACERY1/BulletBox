@@ -27,6 +27,6 @@ module.exports = override(
     "@views": path.resolve(__dirname, "./src/renderer/views"), // 页面库
     "@assets": path.resolve(__dirname, "./src/renderer/assets"), // 公用资源
     "@styles": path.resolve(__dirname, "./src/renderer/common/styles"), // 公用样式
-    "@scripts": path.resolve(__dirname, "./src/renderer/common/scripts") // 公用脚本
+    "@scripts": path.resolve(__dirname, "./src/renderer/common/scripts"), // 公用脚本
   })
 );

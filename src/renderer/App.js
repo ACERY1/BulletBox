@@ -1,18 +1,22 @@
 import React, { Component } from "react";
 import { Button, Layout } from "antd";
-
-import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route } from "react-router-dom";
 import { withRouter } from "react-router";
 
 import "@styles/common.less";
 import "./App.less";
 
+// functions
 import * as EVENTS from "../shared/events";
 import registerToast from "@scripts/registerToast";
+
+// components
 import ProjectListItem from "@components/ProjectListItem";
 
+// pages
 import Init from "@views/Init";
 import Project from "@views/Project";
+import Home from "@views/Home";
 
 const { ipcRenderer } = window.electron;
 const { Sider, Content } = Layout;
@@ -24,22 +28,19 @@ class App extends Component {
       list: [1, 2, 3, 4]
     };
   }
-  boom = () => {
-    ipcRenderer.send(EVENTS.FILE_UPLOAD, "upload file");
+
+  // 初始化项目
+  goToInitProject = () => {
+    this.props.history.push("/init");
   };
+
   componentDidMount() {
-    const { history } = this.props;
-    history.push("init");
+    this.props.history.push("home");
     ipcRenderer.on(EVENTS.HELLO_WORLD, (event, arg) => {
       console.log("got from main", arg);
     });
     registerToast(); // 注册Toast IPC
   }
-
-  // 断点回调fn
-  breakCB = point => {
-    console.log(point);
-  };
 
   render() {
     return (
@@ -48,7 +49,6 @@ class App extends Component {
           <Sider
             className="app-slider"
             collapsible={true}
-            onBreakpoint={this.breakCB}
             width="300"
             theme="light"
           >
@@ -62,7 +62,16 @@ class App extends Component {
               <Router>
                 <Route path="/init" exact component={Init} />
                 <Route path="/project" exact component={Project} />
+                <Route path="/home" exact component={Home} />
               </Router>
+              <div className="app-content-init" onClick={this.goToInitProject}>
+                <Button
+                  type="primary"
+                  shape="circle"
+                  icon="plus-circle"
+                  size="large"
+                />
+              </div>
             </Content>
           </Layout>
         </Layout>
