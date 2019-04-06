@@ -1,3 +1,4 @@
+// 变量直接注入 /config-overrides.js
 module.exports = {
   '@c1': '#303133',
   '@c2': '#606266',
