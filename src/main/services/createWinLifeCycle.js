@@ -5,6 +5,7 @@ import * as EVENTS from "../../shared/events";
 import Toast from "../functions/Toast";
 
 import {Project, DataBase } from "../functions/projects";
+import {selectPath} from '../functions/files';
 
 export default wins => {
   // 创建窗口
@@ -17,6 +18,11 @@ export default wins => {
     console.log("Main got message", arg);
     event.sender.send(EVENTS.HELLO_WORLD, "main process message");
   });
+
+  ipcMain.on(EVENTS.SELECT_PROJECT_PATH, async (evt, arg) => {
+    const pathString = await selectPath();
+    evt.sender.send(EVENTS.SELECT_PROJECT_PATH, pathString)
+  })
 
   ipcMain.on(EVENTS.FILE_UPLOAD, async (event, arg) => {
     // let p = new Project('hello', '#3333', {}, '/srv');

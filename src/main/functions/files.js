@@ -3,8 +3,7 @@ import fs from "fs";
 import http from "http";
 import URL from "url";
 import { dialog } from "electron";
-import path from 'path';
-
+import path from "path";
 
 /**
  * private
@@ -139,3 +138,19 @@ export const upload = (url, filePath, fileName, size, opt = {}) => {
  */
 export const selectFiles = () => {};
 
+/**
+ * 确认上传路径
+ */
+export const selectPath = () => {
+  return new Promise(resolve => {
+    dialog.showOpenDialog(
+      {
+        properties: ["openDirectory", "createDirectory"],
+        message: "select project path"
+      },
+      paths => {
+        resolve(paths[0]);
+      }
+    );
+  });
+};
