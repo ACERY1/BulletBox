@@ -16,13 +16,13 @@ const dataBasePath = path.resolve(userDataPath, "projects.db");
  * @param ? 项目icon
  *  */
 export class Project {
-  constructor(name, appid, servers, path, desc) {
-    if (!name || !appid || !servers || !path || !desc) {
+  constructor(name, desc, path, appid, servers) {
+    if (!name || !appid  || !path || !desc) {
       throw new Error("constructor project 缺少参数");
     }
     this.name = name;
     this.appid = appid;
-    this.servers = servers;
+    this.servers = servers || {};
     this.path = path;
     this.desc = desc;
   }

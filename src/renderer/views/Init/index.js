@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Input, Button } from "antd";
+import { Input, Button, message } from "antd";
 import "./index.less";
 
 import logo from "@assets/logo.png";
 import { generateAppid } from "../../utils/index";
-import * as Events from '../../../shared/events';
+import * as Events from "../../../shared/events";
 
 const { ipcRenderer } = window.electron;
 
@@ -15,33 +15,82 @@ class Init extends Component {
       appid: "",
       projectName: "",
       projectDescription: "",
-      projectPath: ""
+      projectPath: "",
+      inputLock: false
     };
   }
 
   /**
-   * @param {String}
-   * @returns {String} path 文件夹路径
+   * 选择路径
    */
   selectPath = () => {
-    ipcRenderer.send(Events.SELECT_PROJECT_PATH)
-  }
+    ipcRenderer.send(Events.SELECT_PROJECT_PATH);
+  };
+
+  /**
+   * 创建项目
+   */
+  createProject = () => {
+    this.lockInput();
+    const { appid, projectName, projectDescription, projectPath } = this.state;
+    if (!appid || !projectName || !projectDescription || !projectPath) {
+      return message.error("新建项目参数缺失");
+    }
+    ipcRenderer.send(Events.CREATE_PROJECT, {
+      name: projectName,
+      desc: projectDescription,
+      path: projectPath,
+      servers: {},
+      appid
+    });
+  };
+
+  unlockInput = () => {
+    this.setState({
+      inputLock: false
+    });
+  };
+
+  lockInput = () => {
+    this.setState({
+      inputLock: true
+    });
+  };
 
   componentDidMount() {
     this.setState({
       appid: generateAppid()
     });
 
+    // 选择路径
     ipcRenderer.on(Events.SELECT_PROJECT_PATH, (evt, path) => {
       this.setState({
-        projectPath: path,
-      }
-      );
-    })
+        projectPath: path
+      });
+    });
+
+    // 创建项目成功回调
+    ipcRenderer.on(Events.CREATE_PROJECT_SUCCESS, () => {
+      this.unlockInput();
+    });
+
+    // 创建项目失败回调
+  }
+
+  componentWillUnmount() {
+    // 不销毁可能会造成内存泄漏
+    ipcRenderer.removeListener(Events.SELECT_PROJECT_PATH, () => {});
+    ipcRenderer.removeListener(Events.CREATE_PROJECT_SUCCESS, () => {});
+    ipcRenderer.removeListener(Events.CREATE_PROJECT_FAIL, () => {});
   }
 
   render() {
-    const { projectDescription, projectName, projectPath } = this.state;
+    const {
+      projectDescription,
+      projectName,
+      projectPath,
+      inputLock
+    } = this.state;
 
     return (
       <div className="init p10">
@@ -70,6 +119,7 @@ class Init extends Component {
           <p className="t4 c1 w3 mb10 mt20">Project Name:</p>
           <div className="rowBox init-name">
             <Input
+              disabled={inputLock}
               placeholder="Project Name"
               value={projectName}
               onChange={val => this.setState({ projectName: val.target.value })}
@@ -78,6 +128,7 @@ class Init extends Component {
           <p className="t4 c1 w3 mb10 mt20">Project Description:</p>
           <div className="rowBox init-desc">
             <Input
+              disabled={inputLock}
               placeholder="Project Description"
               value={projectDescription}
               onChange={val =>
@@ -90,11 +141,13 @@ class Init extends Component {
             {projectPath ? (
               <p>{projectPath}</p>
             ) : (
-              <Button size="small" onClick={this.selectPath}>Select</Button>
+              <Button size="small" onClick={this.selectPath}>
+                Select
+              </Button>
             )}
           </div>
           <div className="allMidBox mt30">
-            <Button size="large" type="primary">
+            <Button onClick={this.createProject} size="large" type="primary">
               Confirm
             </Button>
           </div>
