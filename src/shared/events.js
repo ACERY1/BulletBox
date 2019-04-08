@@ -9,6 +9,16 @@ export const MIN_SCREEN = "MIN_SCREEN"; // 最小化应用
 export const FILE_UPLOAD = "FILE_UPLOAD";
 
 // 新建项目
+export const SELECT_PROJECT_PATH = "SELECT_PROJECT_PATH"; // 选择项目路径
+export const CREATE_PROJECT = "CREATE_PROJECT"; // 创建项目
+export const CREATE_PROJECT_SUCCESS = "CREATE_PROJECT_SUCCESS"; // 创建项目成功
+export const CREATE_PROJECT_FAIL = "CREATE_PROJECT_FAIL"; // 创建项目失败
+
+// 查询项目
+export const GET_ALL_PROJECTS = "GET_ALL_PROJECTS";
+
+// 修改项目
+export const MODIFY_PROJECT = "MODIFY_PROJECT";
 
 // 弹框通知
 export const TOAST_MESSAGE = "TOAST_MESSAGE"; 
@@ -18,8 +28,3 @@ export const TOAST_SUCCESS = "TOAST_SUCCESS";
 // export const TOAST_CONFIRM = "TOAST_CONFIRM";
 // export const TOAST_CONFIRM_YES = "TOAST_CONFIRM_YES";
 // export const TOAST_CONFIRM_NO = "TOAST_CONFIRM_NO";
-
-export const SELECT_PROJECT_PATH = "SELECT_PROJECT_PATH"; // 选择项目路径
-export const CREATE_PROJECT = "CREATE_PROJECT"; // 创建项目
-export const CREATE_PROJECT_SUCCESS = "CREATE_PROJECT_SUCCESS"; // 创建项目成功
-export const CREATE_PROJECT_FAIL = "CREATE_PROJECT_FAIL"; // 创建项目失败

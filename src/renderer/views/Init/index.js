@@ -72,9 +72,14 @@ class Init extends Component {
     // 创建项目成功回调
     ipcRenderer.on(Events.CREATE_PROJECT_SUCCESS, () => {
       this.unlockInput();
+      ipcRenderer.send(Events.GET_ALL_PROJECTS); // 更新项目列表
     });
 
     // 创建项目失败回调
+    // main进程已通知弹窗，这里可以做一些逻辑操作
+    ipcRenderer.on(Events.CREATE_PROJECT_FAIL, () => {
+      this.unlockInput();
+    });
   }
 
   componentWillUnmount() {

@@ -51,6 +51,12 @@ export default wins => {
     }
   });
 
+  // 查询项目
+  ipcMain.on(EVENTS.GET_ALL_PROJECTS, async (evt) => {
+    const projects = await DB.getAllProjects();
+    evt.sender.send(EVENTS.GET_ALL_PROJECTS, projects)
+  })
+
   ipcMain.on(EVENTS.FILE_UPLOAD, async (event, arg) => {
     // let p = new Project('hello', '#3333', {}, '/srv');
 

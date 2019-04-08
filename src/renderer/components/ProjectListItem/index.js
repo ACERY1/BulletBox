@@ -6,25 +6,26 @@ class ProjectListItem extends Component {
   render() {
     const {
       name = "bulletbox",
-      time = "2019年04月04日11:32:26",
-      status = 0
-    } = this.props;
+      desc = "transform your code easily",
+      updateTime = "ERROR TIME RECORDING",
+      status = 0,
+      appid = 0,
+      path = "/pathError"
+    } = this.props.project;
     return (
       <div className="PItem bdr1_ra4 m10 p20">
         <div className="rowBox info">
           <div className="PItem-name t3 w2 c1">{name}</div>
           <div className="PItem-time">{status}</div>
         </div>
-        <div className="PItem-status t5 w3 c2">{time}</div>
+        <div className="PItem-status t5 w3 c2">{updateTime}</div>
       </div>
     );
   }
 }
 
 ProjectListItem.propTypes = {
-  name: PropTypes.string, // 项目名
-  time: PropTypes.string, // 时间
-  status: PropTypes.number // 1 means error
+  project: PropTypes.object
 };
 
 export default ProjectListItem;

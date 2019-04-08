@@ -25,7 +25,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      list: [1, 2, 3, 4]
+      projectList: [],
     };
   }
 
@@ -36,25 +36,42 @@ class App extends Component {
 
   componentDidMount() {
     this.props.history.push("home");
-    ipcRenderer.on(EVENTS.HELLO_WORLD, (event, arg) => {
-      console.log("got from main", arg);
+
+    ipcRenderer.on(EVENTS.GET_ALL_PROJECTS, (event, projects) => {
+      console.log(projects);
+      this.setState({
+        projectList: projects || []
+      });
     });
+
+    ipcRenderer.send(EVENTS.GET_ALL_PROJECTS, () => {});
+
     registerToast(); // 注册Toast IPC
   }
 
+  componentWillUnmount() {
+    ipcRenderer.removeListener(EVENTS.GET_ALL_PROJECTS, () => {});
+  }
+
   render() {
+    const { projectList } = this.state;
+    const hasProjects = projectList.length;
     return (
       <div className="app">
         <Layout>
           <Sider
-            className="app-slider"
+            className="app-slider p10"
             collapsible={true}
             width="300"
             theme="light"
           >
-            {this.state.list.map((item, key) => (
-              <ProjectListItem key={key} />
-            ))}
+            {hasProjects ? (
+              this.state.projectList.map((item, key) => (
+                <ProjectListItem key={key} project={item} />
+              ))
+            ) : (
+              <p className="t4 w4 c3 t_center p10 bdr1_ra4">You Have No Project</p>
+            )}
           </Sider>
 
           <Layout>
