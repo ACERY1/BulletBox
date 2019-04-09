@@ -6,7 +6,7 @@ module.exports = {
   '@c4': '#C0C4CC',
   '@c5': '#DCDFE6',
   '@c6': '#E4E7ED',
-  '@status_success': '#2be659',
-  '@status_fail': '#f84f4f',
+  '@status_success': '#5cc375',
+  '@status_fail': '#e85b5b',
   '@shadow': '#d4d4d4',
 };

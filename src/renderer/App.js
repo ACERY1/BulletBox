@@ -35,7 +35,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.props.history.push("home");
+    this.props.history.push("/home");
 
     ipcRenderer.on(EVENTS.GET_ALL_PROJECTS, (event, projects) => {
       console.log(projects);
@@ -60,7 +60,7 @@ class App extends Component {
       <div className="app">
         <Layout>
           <Sider
-            className="app-slider p10"
+            className="app-slider"
             collapsible={true}
             width="300"
             theme="light"
@@ -78,7 +78,7 @@ class App extends Component {
             <Content className="app-content">
               <Router>
                 <Route path="/init" exact component={Init} />
-                <Route path="/project" exact component={Project} />
+                <Route path="/project/:id" exact component={Project} />
                 <Route path="/home" exact component={Home} />
               </Router>
               <div className="app-content-init" onClick={this.goToInitProject}>

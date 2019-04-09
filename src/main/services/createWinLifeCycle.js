@@ -18,7 +18,8 @@ export default wins => {
   try {
     var DB = new DataBase();
   } catch (err) {
-    toast.error(err);
+    console.log('数据库连接失败', err)
+    toast.error('数据库连接失败');
   }
 
   // TEST事件
@@ -43,19 +44,30 @@ export default wins => {
       await DB.insertProject(p);
       evt.sender.send(EVENTS.CREATE_PROJECT_SUCCESS);
       toast.success("新建项目成功！");
+
+      // FIXME: debug用查看所有项目
       const projects  = await DB.getAllProjects();
       console.log(projects);
+
     } catch (err) {
-      toast.error(err);
+      console.log('新建项目失败', err)
+      toast.error('新建项目失败');
       evt.sender.send(EVENTS.CREATE_PROJECT_FAIL);
     }
   });
 
-  // 查询项目
+  // 查询所有项目
   ipcMain.on(EVENTS.GET_ALL_PROJECTS, async (evt) => {
     const projects = await DB.getAllProjects();
     evt.sender.send(EVENTS.GET_ALL_PROJECTS, projects)
   })
+
+  ipcMain.on(EVENTS.GET_PROJECT_BY_ID, async (evt, appid) => {
+    const projectInfo = await DB.getProjectById(appid);
+    console.log(projectInfo);
+    evt.sender.send(EVENTS.GET_PROJECT_BY_ID, projectInfo);
+  })
+
 
   ipcMain.on(EVENTS.FILE_UPLOAD, async (event, arg) => {
     // let p = new Project('hello', '#3333', {}, '/srv');

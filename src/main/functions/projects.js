@@ -32,7 +32,6 @@ export class Project {
     this.status = 0;
   }
 
-
   getServerPathByEnv(env) {
     return this.servers[env] ? this.servers[env] : "http://localhost:8080";
   }
@@ -93,7 +92,7 @@ export class DataBase {
    * @param {Project} project
    */
   modifyProject(appid, project) {
-    return Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (!appid || typeof appid != "string")
         reject("修改项目失败：未传入appid");
       const setObj = {};
@@ -118,6 +117,19 @@ export class DataBase {
           resolve();
         }
       );
+    });
+  }
+
+  /**
+   * 根据appid获取项目信息
+   * @param {String} appid
+   */
+  getProjectById(appid) {
+    return new Promise((resolve, reject) => {
+      this.db.findOne({ appid: appid }, (err, project) => {
+        if (err) reject(err);
+        resolve(project);
+      });
     });
   }
 }

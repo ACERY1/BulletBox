@@ -16,6 +16,7 @@ export const CREATE_PROJECT_FAIL = "CREATE_PROJECT_FAIL"; // 创建项目失败
 
 // 查询项目
 export const GET_ALL_PROJECTS = "GET_ALL_PROJECTS";
+export const GET_PROJECT_BY_ID = "GET_PROJECT_BY_ID";
 
 // 修改项目
 export const MODIFY_PROJECT = "MODIFY_PROJECT";
