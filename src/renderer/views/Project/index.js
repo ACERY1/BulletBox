@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./index.less";
 import * as EVENTS from "../../../shared/events";
 import { withRouter } from "react-router";
-import { message, Row, Col } from "antd";
+import { message, Row, Col, Button } from "antd";
 
 import logo from "@assets/logo.png";
 const { ipcRenderer } = window.electron;
@@ -22,6 +22,7 @@ class Project extends Component {
     };
   }
 
+
   componentDidMount() {
     if (!this.props.match.params.id) {
       return message.error("无效的appid");
@@ -38,7 +39,7 @@ class Project extends Component {
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeListener(EVENTS.GET_PROJECT_BY_ID, () => {});
+    ipcRenderer.removeAllListeners(EVENTS.GET_PROJECT_BY_ID);
   }
 
   render() {
@@ -64,7 +65,16 @@ class Project extends Component {
           </Col>
           <Col span={10}>
             <p className="mt30 mb10 t5 w2 c2">Last Modify Time: {updateTime}</p>
-            <p className="t5 w2 c2">path: {path}</p>
+            <p className="t5 w2 c2 mb10">path: {path}</p>
+            <Button
+              type="primary"
+              shape="circle"
+              icon="edit"
+              size="small"
+              onClick={() => {
+                this.props.history.push({ pathname: "/init", search: `?edit=true&appid=${appid}` });
+              }}
+            />
           </Col>
         </Row>
       </div>

@@ -25,13 +25,13 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      projectList: [],
+      projectList: []
     };
   }
 
   // 初始化项目
   goToInitProject = () => {
-    this.props.history.push("/init");
+    this.props.history.push('/init');
   };
 
   componentDidMount() {
@@ -44,13 +44,13 @@ class App extends Component {
       });
     });
 
-    ipcRenderer.send(EVENTS.GET_ALL_PROJECTS, () => {});
+    ipcRenderer.send(EVENTS.GET_ALL_PROJECTS);
 
     registerToast(); // 注册Toast IPC
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeListener(EVENTS.GET_ALL_PROJECTS, () => {});
+    ipcRenderer.removeAllListeners(EVENTS.GET_ALL_PROJECTS);
   }
 
   render() {
@@ -70,7 +70,9 @@ class App extends Component {
                 <ProjectListItem key={key} project={item} />
               ))
             ) : (
-              <p className="t4 w4 c3 t_center p10 bdr1_ra4">You Have No Project</p>
+              <p className="t4 w4 c3 t_center p10 bdr1_ra4">
+                You Have No Project
+              </p>
             )}
           </Sider>
 

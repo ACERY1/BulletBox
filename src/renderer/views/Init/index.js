@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Input, Button, message } from "antd";
 import "./index.less";
+import { withRouter } from "react-router";
 
 import logo from "@assets/logo.png";
 import { generateAppid } from "../../utils/index";
@@ -16,7 +17,8 @@ class Init extends Component {
       projectName: "",
       projectDescription: "",
       projectPath: "",
-      inputLock: false
+      inputLock: false,
+      isEditMode: false // 是否是编辑项目信息
     };
   }
 
@@ -45,6 +47,23 @@ class Init extends Component {
     });
   };
 
+  /**
+   * 编辑项目
+   */
+  editProject = () => {
+    const { appid, projectName, projectDescription, projectPath } = this.state;
+    if (!appid || !projectName || !projectDescription || !projectPath) {
+      return message.error("新建项目参数缺失");
+    }
+    ipcRenderer.send(Events.MODIFY_PROJECT, {
+      name: projectName,
+      desc: projectDescription,
+      path: projectPath,
+      appid
+    })
+
+  };
+
   unlockInput = () => {
     this.setState({
       inputLock: false
@@ -58,9 +77,33 @@ class Init extends Component {
   };
 
   componentDidMount() {
-    this.setState({
-      appid: generateAppid()
-    });
+    const params = new URLSearchParams(this.props.location.search);
+    if (params.get("edit") && params.get("appid")) {
+      console.log("项目编辑模式");
+      this.setState({
+        isEditMode: !!params.get("edit")
+      });
+      ipcRenderer.on(Events.GET_PROJECT_BY_ID, (evt, projectInfo) => {
+        this.setState({
+          projectName: projectInfo.name,
+          projectDescription: projectInfo.desc,
+          projectPath: projectInfo.path,
+          appid: params.get("appid")
+        });
+      });
+
+      ipcRenderer.on(Events.MODIFY_PROJECT, evt => {
+        // 编辑成功
+        ipcRenderer.send(Events.GET_ALL_PROJECTS);
+        this.props.history.goBack();
+      })
+      // 编辑模式通过id请求数据
+      ipcRenderer.send(Events.GET_PROJECT_BY_ID, params.get("appid"));
+    } else {
+      this.setState({
+        appid: generateAppid()
+      });
+    }
 
     // 选择路径
     ipcRenderer.on(Events.SELECT_PROJECT_PATH, (evt, path) => {
@@ -80,13 +123,16 @@ class Init extends Component {
     ipcRenderer.on(Events.CREATE_PROJECT_FAIL, () => {
       this.unlockInput();
     });
+    
   }
 
   componentWillUnmount() {
     // 不销毁可能会造成内存泄漏
-    ipcRenderer.removeListener(Events.SELECT_PROJECT_PATH, () => {});
-    ipcRenderer.removeListener(Events.CREATE_PROJECT_SUCCESS, () => {});
-    ipcRenderer.removeListener(Events.CREATE_PROJECT_FAIL, () => {});
+    ipcRenderer.removeAllListeners(Events.GET_PROJECT_BY_ID);
+    ipcRenderer.removeAllListeners(Events.MODIFY_PROJECT);
+    ipcRenderer.removeAllListeners(Events.SELECT_PROJECT_PATH);
+    ipcRenderer.removeAllListeners(Events.CREATE_PROJECT_SUCCESS);
+    ipcRenderer.removeAllListeners(Events.CREATE_PROJECT_FAIL);
   }
 
   render() {
@@ -94,7 +140,8 @@ class Init extends Component {
       projectDescription,
       projectName,
       projectPath,
-      inputLock
+      inputLock,
+      isEditMode
     } = this.state;
 
     return (
@@ -150,11 +197,22 @@ class Init extends Component {
                 Select
               </Button>
             )}
+            {isEditMode ? (
+              <Button size="small" onClick={this.selectPath}>
+                Select
+              </Button>
+            ) : null}
           </div>
           <div className="allMidBox mt30">
-            <Button onClick={this.createProject} size="large" type="primary">
-              Confirm
-            </Button>
+            {isEditMode ? (
+              <Button onClick={this.editProject} size="large" type="primary">
+                Confirm Edit
+              </Button>
+            ) : (
+              <Button onClick={this.createProject} size="large" type="primary">
+                Confirm
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -162,4 +220,4 @@ class Init extends Component {
   }
 }
 
-export default Init;
+export default withRouter(Init);

@@ -98,7 +98,7 @@ export class DataBase {
       const setObj = {};
       // 支持部分更新属性
       Project.attrs.forEach(attr => {
-        if (project[attr]) {
+        if (project[attr]&& attr!='appid') {
           setObj[attr] = project[attr];
         }
       });
