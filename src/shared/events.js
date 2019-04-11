@@ -21,6 +21,9 @@ export const GET_PROJECT_BY_ID = "GET_PROJECT_BY_ID";
 // 修改项目
 export const MODIFY_PROJECT = "MODIFY_PROJECT";
 
+// 删除项目
+export const DELETE_PROJECT = "DELETE_PROJECT";
+
 // 弹框通知
 export const TOAST_MESSAGE = "TOAST_MESSAGE"; 
 export const TOAST_ERROR = "TOAST_ERROR";

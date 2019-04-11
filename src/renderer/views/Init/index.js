@@ -116,6 +116,7 @@ class Init extends Component {
     ipcRenderer.on(Events.CREATE_PROJECT_SUCCESS, () => {
       this.unlockInput();
       ipcRenderer.send(Events.GET_ALL_PROJECTS); // 更新项目列表
+      this.props.history.push(`/project/${this.state.appid}`)
     });
 
     // 创建项目失败回调

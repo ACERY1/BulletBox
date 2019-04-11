@@ -22,11 +22,17 @@ class Project extends Component {
     };
   }
 
+  removeProject = () => {
+    ipcRenderer.send(EVENTS.DELETE_PROJECT, this.state.projectInfo.appid);
+
+  }
 
   componentDidMount() {
     if (!this.props.match.params.id) {
       return message.error("无效的appid");
     }
+
+    // 获取项目
     ipcRenderer.on(EVENTS.GET_PROJECT_BY_ID, (evt, projectInfo) => {
       const data = Object.assign(this.state.projectInfo, projectInfo);
       this.setState({
@@ -34,12 +40,19 @@ class Project extends Component {
       });
     });
 
+    // 删除项目
+    ipcRenderer.on(EVENTS.DELETE_PROJECT, () => {
+      ipcRenderer.send(EVENTS.GET_ALL_PROJECTS);
+      this.props.history.push('/home');
+    })
+
     // 初次进入页面请求一次
     ipcRenderer.send(EVENTS.GET_PROJECT_BY_ID, this.props.match.params.id);
   }
 
   componentWillUnmount() {
     ipcRenderer.removeAllListeners(EVENTS.GET_PROJECT_BY_ID);
+    ipcRenderer.removeAllListeners(EVENTS.DELETE_PROJECT);
   }
 
   render() {
@@ -75,6 +88,14 @@ class Project extends Component {
                 this.props.history.push({ pathname: "/init", search: `?edit=true&appid=${appid}` });
               }}
             />
+            <Button
+            type="primary"
+            shape="circle"
+            icon="delete"
+            size="small"
+            className="remove-btn ml20"
+            onClick={this.removeProject}
+          />
           </Col>
         </Row>
       </div>

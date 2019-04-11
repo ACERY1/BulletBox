@@ -98,7 +98,7 @@ export class DataBase {
       const setObj = {};
       // 支持部分更新属性
       Project.attrs.forEach(attr => {
-        if (project[attr]&& attr!='appid') {
+        if (project[attr] && attr != "appid") {
           setObj[attr] = project[attr];
         }
       });
@@ -131,6 +131,19 @@ export class DataBase {
         resolve(project);
       });
     });
+  }
+
+  /**
+   * 删除项目
+   */
+  deleteProjectById(appid) {
+    return new Promise((resolve, reject) => {
+      this.db.remove({appid: appid}, { multi: false }, function (err, numRemoved) {
+        if(err) reject(err)
+        console.log('成功删除' + numRemoved + '个项目')
+        resolve();
+      });
+    })
   }
 }
 

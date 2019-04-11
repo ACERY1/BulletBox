@@ -75,9 +75,21 @@ export default wins => {
       // success signal
       evt.sender.send(EVENTS.MODIFY_PROJECT) 
     } catch (err) {
+      console.log(err);
       toast.error("编辑项目失败");
     }
   });
+
+  ipcMain.on(EVENTS.DELETE_PROJECT, async (evt, appid) => {
+    try {
+      await DB.deleteProjectById(appid);
+      toast.success("删除项目成功")
+      evt.sender.send(EVENTS.DELETE_PROJECT);
+    } catch (err) {
+      console.log(err);
+      toast.error('删除项目失败')
+    }
+  })
 
   ipcMain.on(EVENTS.FILE_UPLOAD, async (event, arg) => {
     // let p = new Project('hello', '#3333', {}, '/srv');
