@@ -9,4 +9,5 @@ module.exports = {
   '@status_success': '#5cc375',
   '@status_fail': '#e85b5b',
   '@shadow': '#d4d4d4',
+  '@btn_normal': '#4ca4ef',
 };

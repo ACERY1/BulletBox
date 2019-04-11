@@ -42,7 +42,7 @@ class Init extends Component {
       name: projectName,
       desc: projectDescription,
       path: projectPath,
-      servers: {},
+      servers: [],
       appid
     });
   };

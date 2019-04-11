@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import "./index.less";
 import * as EVENTS from "../../../shared/events";
 import { withRouter } from "react-router";
-import { message, Row, Col, Button } from "antd";
+import { message, Row, Col, Button, Icon } from "antd";
+import ServerBar from "@components/ServerBar";
 
 import logo from "@assets/logo.png";
 const { ipcRenderer } = window.electron;
@@ -15,7 +16,7 @@ class Project extends Component {
         name: "--",
         desc: "****",
         path: "no path",
-        servers: [],
+        servers: [1],
         updateTime: "yyyy-mm-dd hh:mm",
         appid: 0
       }
@@ -24,8 +25,7 @@ class Project extends Component {
 
   removeProject = () => {
     ipcRenderer.send(EVENTS.DELETE_PROJECT, this.state.projectInfo.appid);
-
-  }
+  };
 
   componentDidMount() {
     if (!this.props.match.params.id) {
@@ -43,8 +43,8 @@ class Project extends Component {
     // 删除项目
     ipcRenderer.on(EVENTS.DELETE_PROJECT, () => {
       ipcRenderer.send(EVENTS.GET_ALL_PROJECTS);
-      this.props.history.push('/home');
-    })
+      this.props.history.push("/home");
+    });
 
     // 初次进入页面请求一次
     ipcRenderer.send(EVENTS.GET_PROJECT_BY_ID, this.props.match.params.id);
@@ -60,10 +60,38 @@ class Project extends Component {
       name,
       desc,
       path,
-      servers,
+      // servers,
       updateTime,
       appid
     } = this.state.projectInfo;
+
+    const servers = [
+      {
+        appid: "",
+        projectName: "",
+        projectDescription: "",
+        projectPath: "",
+        inputLock: false,
+        isEditMode: false // 是否是编辑项目信息
+      },
+      {
+        appid: "",
+        projectName: "",
+        projectDescription: "",
+        projectPath: "",
+        inputLock: false,
+        isEditMode: false // 是否是编辑项目信息
+      },
+      {
+        appid: "",
+        projectName: "",
+        projectDescription: "",
+        projectPath: "",
+        inputLock: false,
+        isEditMode: false // 是否是编辑项目信息
+      }
+    ];
+    const isServersArray = Array.isArray(servers);
 
     return (
       <div className="project p20">
@@ -85,19 +113,28 @@ class Project extends Component {
               icon="edit"
               size="small"
               onClick={() => {
-                this.props.history.push({ pathname: "/init", search: `?edit=true&appid=${appid}` });
+                this.props.history.push({
+                  pathname: "/init",
+                  search: `?edit=true&appid=${appid}`
+                });
               }}
             />
             <Button
-            type="primary"
-            shape="circle"
-            icon="delete"
-            size="small"
-            className="remove-btn ml20"
-            onClick={this.removeProject}
-          />
+              type="primary"
+              shape="circle"
+              icon="delete"
+              size="small"
+              className="remove-btn ml20"
+              onClick={this.removeProject}
+            />
           </Col>
         </Row>
+        {isServersArray &&
+          servers.map((item, index) => <ServerBar key={index} {...item} />)}
+        <div className="allMidBox mt20">
+          <Icon type="plus-circle" theme="filled" className="add-btn" />
+          <p className="t5 w3 c2 mt5">Add Server Config</p>
+        </div>
       </div>
     );
   }

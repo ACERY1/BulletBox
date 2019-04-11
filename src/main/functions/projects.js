@@ -20,11 +20,11 @@ const dataBasePath = path.resolve(userDataPath, "projects.db");
 export class Project {
   constructor(name, desc, path, appid, servers) {
     if (!name || !appid || !path || !desc) {
-      throw new Error("constructor project 缺少参数");
+      throw new Error("constructor Project 缺少参数");
     }
     this.name = name;
     this.appid = appid;
-    this.servers = servers || {};
+    this.servers = servers || [];
     this.path = path;
     this.desc = desc;
     // update create time 该参数内置 不用传
@@ -40,6 +40,26 @@ export class Project {
   updateModifyTime() {
     this.updateTime = moment().format("YYYY-MM-DD hh:mm");
   }
+
+  
+}
+
+/**
+ * Server Entity
+ */
+export class Server {
+  constructor({env, url, path}) {
+    if(!env || !url || !path) {
+      throw new Error("constructor Server 缺少参数")
+    }
+    this.env = env;
+    this.url = url;
+    this.path = path;
+    this.updateTime = moment().format("YYYY-MM-DD hh:mm");
+    this.status = 1;
+  }
+
+
 }
 
 export class DataBase {
