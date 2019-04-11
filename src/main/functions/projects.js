@@ -102,6 +102,8 @@ export class DataBase {
           setObj[attr] = project[attr];
         }
       });
+      // 更新 修改时间
+      setObj.updateTime = moment().format("YYYY-MM-DD hh:mm");
       this.db.update(
         {
           appid: project.appid // 根据appid查询
