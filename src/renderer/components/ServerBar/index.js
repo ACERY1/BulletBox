@@ -3,23 +3,15 @@ import { Row, Col, Button, Icon } from "antd";
 import "./index.less";
 
 class ServerBar extends Component {
-  serverInfo = {
-    env: "local",
-    url: "http://www.baidu.com",
-    path: "/hello/srv",
-    status: 0,
-    version: "0.0.1",
-    updateTime: "2018-12-12 12:00"
-  };
 
   render() {
     const {
-      env = "local",
-      url = "http://localhost:8888",
-      path = "/web/srv",
+      env = "ERROR",
+      url = "http://localhost",
+      path = "/web/error",
       status = 1,
-      version = "0.0.1",
-      updateTime = "2019-4-10 12:00"
+      version = "*.*.*",
+      updateTime = "YYYY-MM-DD hh:mm"
     } = this.props;
 
     return (

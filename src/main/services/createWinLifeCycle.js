@@ -73,7 +73,7 @@ export default wins => {
       await DB.modifyProject(projectInfo.appid, projectInfo);
       toast.success("编辑项目成功");
       // success signal
-      evt.sender.send(EVENTS.MODIFY_PROJECT) 
+      evt.sender.send(EVENTS.MODIFY_PROJECT);
     } catch (err) {
       console.log(err);
       toast.error("编辑项目失败");
@@ -83,13 +83,28 @@ export default wins => {
   ipcMain.on(EVENTS.DELETE_PROJECT, async (evt, appid) => {
     try {
       await DB.deleteProjectById(appid);
-      toast.success("删除项目成功")
+      toast.success("删除项目成功");
       evt.sender.send(EVENTS.DELETE_PROJECT);
     } catch (err) {
       console.log(err);
-      toast.error('删除项目失败')
+      toast.error("删除项目失败");
     }
-  })
+  });
+
+  ipcMain.on(EVENTS.ADD_SERVER_ITEM, async (evt, { serverItem, appid }) => {
+    try {
+      await DB.addServerItemById(appid, serverItem);
+      toast.success("添加服务器配置成功");
+      evt.sender.send(EVENTS.ADD_SERVER_ITEM);
+    } catch (error) {
+      console.log(error);
+      if(error.msg) {
+        toast.error(error.msg);
+      } else {
+        toast.error("添加服务器配置失败");
+      }
+    }
+  });
 
   ipcMain.on(EVENTS.FILE_UPLOAD, async (event, arg) => {
     // let p = new Project('hello', '#3333', {}, '/srv');

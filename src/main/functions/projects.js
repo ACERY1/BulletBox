@@ -8,6 +8,22 @@ const userDataPath = app.getPath("userData");
 const dataBasePath = path.resolve(userDataPath, "projects.db");
 
 /**
+ * 判断一个对象数组中，某个属性的值是否已经出现过了
+ * 没有出现返回0，有返回1, 异常-1
+ * @param {Array} ObjectArray 对象数组
+ * @param {String} key 欲检查的键名
+ * @param {Any} val 欲检查的值（不支持对象）
+ */
+const _findExistValueForKey = (ObjectArray, key, val) => {
+  if (!(ObjectArray instanceof Array)) return -1;
+  let flg = 0;
+  ObjectArray.forEach(objItem => {
+    if (objItem[key] === val) flg=1;
+  });
+  return flg;
+};
+
+/**
  * project entity
  * @param {String} name 项目名
  * @param {String} appid 项目id
@@ -40,17 +56,15 @@ export class Project {
   updateModifyTime() {
     this.updateTime = moment().format("YYYY-MM-DD hh:mm");
   }
-
-  
 }
 
 /**
  * Server Entity
  */
 export class Server {
-  constructor({env, url, path}) {
-    if(!env || !url || !path) {
-      throw new Error("constructor Server 缺少参数")
+  constructor({ env, url, path }) {
+    if (!env || !url || !path) {
+      throw new Error("constructor Server 缺少参数");
     }
     this.env = env;
     this.url = url;
@@ -58,8 +72,6 @@ export class Server {
     this.updateTime = moment().format("YYYY-MM-DD hh:mm");
     this.status = 1;
   }
-
-
 }
 
 export class DataBase {
@@ -160,12 +172,61 @@ export class DataBase {
    */
   deleteProjectById(appid) {
     return new Promise((resolve, reject) => {
-      this.db.remove({appid: appid}, { multi: false }, function (err, numRemoved) {
-        if(err) reject(err)
-        console.log('成功删除' + numRemoved + '个项目')
+      this.db.remove({ appid: appid }, { multi: false }, function(
+        err,
+        numRemoved
+      ) {
+        if (err) reject(err);
+        console.log("成功删除" + numRemoved + "个项目");
         resolve();
       });
-    })
+    });
+  }
+
+  /**
+   * 根据appid添加服务器配置
+   * @param {String} appid
+   * @param {Object} serverItem
+   * 查询项目，判断env是否重复，不重复则更新
+   */
+  addServerItemById(appid, serverItem) {
+    return new Promise((resolve, reject) => {
+      this.getProjectById(appid)
+        .then(project => {
+          const keyStatus = _findExistValueForKey(
+            project.servers,
+            "env",
+            serverItem.env
+          );
+          if (keyStatus === 1) {
+          reject({
+              msg: "env存在"
+            });
+            return false;
+          }
+          const servers = project.servers;
+          const server = new Server(serverItem);
+          servers.push(server);
+          this.db.update(
+            { appid: appid },
+            {
+              $set: {
+                servers: servers
+              }
+            },
+            {
+              multi: false
+            },
+            err => {
+              if (err) reject(err);
+              resolve();
+            }
+          );
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   }
 }
 
