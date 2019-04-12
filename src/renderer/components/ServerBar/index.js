@@ -1,8 +1,20 @@
 import React, { Component } from "react";
 import { Row, Col, Button, Icon } from "antd";
 import "./index.less";
-
+import * as EVENTS from '../../../shared/events';
+const { ipcRenderer } = window.electron;
 class ServerBar extends Component {
+
+  edit = () => {}
+
+  remove = () => {
+    ipcRenderer.send(EVENTS.REMOVE_SERVER_ITEM_BY_ENV, {
+      appid: this.props.appid,
+      env: this.props.env
+    })
+  }
+  
+  
 
   render() {
     const {
@@ -11,7 +23,8 @@ class ServerBar extends Component {
       path = "/web/error",
       status = 1,
       version = "*.*.*",
-      updateTime = "YYYY-MM-DD hh:mm"
+      updateTime = "YYYY-MM-DD hh:mm",
+      appid
     } = this.props;
 
     return (
@@ -41,18 +54,25 @@ class ServerBar extends Component {
           <Col span={6}>
             <Row justify="center">
               <Col span={24}>
-                <Button type="primary" className="mr10"  icon="link">
+                <Button type="primary" className="mr10" icon="link">
                   Link
                 </Button>
-                <Button type="primary" icon="upload">Deploy</Button>
+                <Button type="primary" icon="upload">
+                  Deploy
+                </Button>
               </Col>
             </Row>
             <Row className="mt10">
               <Col span={24}>
-                <Button type="primary" className="mr10" size="small" icon="edit">
+                <Button
+                  type="primary"
+                  className="mr10"
+                  size="small"
+                  icon="edit"
+                >
                   Edit
                 </Button>
-                <Button type="danger" size="small" icon="delete" >
+                <Button type="danger" size="small" icon="delete" onClick={this.remove}>
                   Delete
                 </Button>
               </Col>
@@ -61,17 +81,23 @@ class ServerBar extends Component {
           <Col span={2}>
             <div className="allMidBox">
               {status ? (
-                <Icon
-                  type="close-circle"
-                  theme="filled"
-                  className="server-status fail"
-                />
+                <div>
+                  <Icon
+                    type="close-circle"
+                    theme="filled"
+                    className="server-status fail"
+                  />
+                  <p className="t5 c1 w2 mt10 t_center">Fail</p>
+                </div>
               ) : (
+                <div>
                 <Icon
-                  type="check-circle"
-                  theme="filled"
-                  className="server-status success"
-                />
+                type="check-circle"
+                theme="filled"
+                className="server-status success"
+              />
+              <p className="t5 c1 w2 mt10 t_center">Success</p>
+                </div>
               )}
             </div>
           </Col>

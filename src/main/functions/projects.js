@@ -18,7 +18,7 @@ const _findExistValueForKey = (ObjectArray, key, val) => {
   if (!(ObjectArray instanceof Array)) return -1;
   let flg = 0;
   ObjectArray.forEach(objItem => {
-    if (objItem[key] === val) flg=1;
+    if (objItem[key] === val) flg = 1;
   });
   return flg;
 };
@@ -199,7 +199,7 @@ export class DataBase {
             serverItem.env
           );
           if (keyStatus === 1) {
-          reject({
+            reject({
               msg: "env存在"
             });
             return false;
@@ -226,6 +226,75 @@ export class DataBase {
         .catch(err => {
           reject(err);
         });
+    });
+  }
+
+  /**
+   * 根据 appid 和 env 删除某项目的Server配置
+   * @param {String} appid
+   * @param {String} env
+   */
+  removeServerItemById(appid, env) {
+    return new Promise((resolve, reject) => {
+      this.getProjectById(appid)
+        .then(project => {
+          let index = -1;
+          project.servers.forEach((srv, idx) => {
+            if (srv.env === env) index = idx;
+          });
+          project.servers.splice(index, 1);
+          this.db.update(
+            { appid: appid },
+            {
+              $set: {
+                servers: project.servers
+              }
+            },
+            {
+              multi: false
+            },
+            err => {
+              if (err) reject(err);
+              resolve(project);
+            }
+          );
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+   * 根据 appid 和 env 编辑某项目的Server配置
+   * @param {String} appid
+   * @param {String} env
+   * @param {Object} serverItem
+   */
+  editServerItemById(appid, env, serverItem) {
+    return new Promise((resolve, reject) => {
+      this.getProjectById(appid)
+        .then(project => {
+          const servers = project.servers.map(srv => {
+            if (srv.env === env) return (srv = serverItem);
+            return srv;
+          });
+          console.log(servers)
+          this.db.update(
+            { appid: appid },
+            {
+              $set: {
+                servers: servers
+              }
+            },
+            {
+              multi: false
+            },
+            err => {
+              if (err) reject(err);
+              resolve();
+            }
+          );
+        })
+        .catch(err => reject(err));
     });
   }
 }

@@ -154,7 +154,7 @@ class Project extends Component {
           </Col>
         </Row>
         {isServersArray &&
-          servers.map((item, index) => <ServerBar key={index} {...item} />)}
+          servers.map((item, index) => <ServerBar key={index} {...item} appid={appid} />)}
         <div className="allMidBox mt20">
           <Icon
             type="plus-circle"

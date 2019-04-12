@@ -98,11 +98,22 @@ export default wins => {
       evt.sender.send(EVENTS.ADD_SERVER_ITEM);
     } catch (error) {
       console.log(error);
-      if(error.msg) {
+      if (error.msg) {
         toast.error(error.msg);
       } else {
         toast.error("添加服务器配置失败");
       }
+    }
+  });
+
+  ipcMain.on(EVENTS.REMOVE_SERVER_ITEM_BY_ENV, async (evt, { appid, env }) => {
+    try {
+      const project = await DB.removeServerItemById(appid, env);
+      toast.success("删除服务端配置成功");
+      mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project)
+    } catch (error) {
+      console.log(error);
+      toast("删除服务器配置失败");
     }
   });
 
