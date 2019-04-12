@@ -21,6 +21,7 @@ class Project extends Component {
         appid: 0
       },
       modalVisible: false,
+      isEditServer: false,
       serverItem: {
         path: "",
         url: "",
@@ -33,27 +34,53 @@ class Project extends Component {
     ipcRenderer.send(EVENTS.DELETE_PROJECT, this.state.projectInfo.appid);
   };
 
-  /** 添加服务配置 */
+  /** 添加服务配置、编辑服务配置 */
   addServer = () => {
-    const {env, path, url} = this.state.serverItem
-    if(!env || !path || !url) {
-      return message.error('参数不能为空');
+    const { env, path, url } = this.state.serverItem;
+    if (!env || !path || !url) {
+      return message.error("参数不能为空");
     }
-    ipcRenderer.send(EVENTS.ADD_SERVER_ITEM, {
-      appid: this.state.projectInfo.appid,
-      serverItem: this.state.serverItem
-    })
+    if (this.state.isEditServer) {
+      ipcRenderer.send(EVENTS.EDIT_SERVER_ITEM, {
+        appid: this.state.projectInfo.appid,
+        env: this.state.serverItem.env,
+        serverItem: this.state.serverItem
+      });
+    } else {
+      ipcRenderer.send(EVENTS.ADD_SERVER_ITEM, {
+        appid: this.state.projectInfo.appid,
+        serverItem: this.state.serverItem
+      });
+    }
   };
 
-  openModal = () => {
-    this.setState({
-      modalVisible: true
-    });
+  openModal = env => {
+    if (env.mode === "edit") {
+      let serverItem = {};
+      serverItem.path = env.path;
+      serverItem.url = env.url;
+      serverItem.env = env.env;
+      this.setState({
+        modalVisible: true,
+        isEditServer: true, // 服务器配置编辑模式
+        serverItem: serverItem
+      });
+    } else {
+      this.setState({
+        modalVisible: true
+      });
+    }
   };
 
   closeModal = () => {
     this.setState({
-      modalVisible: false
+      modalVisible: false,
+      isEditServer: false,
+      serverItem: {
+        path: "",
+        env: "",
+        url: ""
+      }
     });
   };
 
@@ -87,10 +114,22 @@ class Project extends Component {
     });
 
     // 添加服务器配置
-    ipcRenderer.on(EVENTS.ADD_SERVER_ITEM, ()=> {
+    // 注意：编辑服务器配置的ipc也关联了该监听器
+    ipcRenderer.on(EVENTS.ADD_SERVER_ITEM, () => {
       ipcRenderer.send(EVENTS.GET_PROJECT_BY_ID, this.props.match.params.id);
       this.closeModal();
-    })
+      this.setState({
+        serverItem: {
+          path: "",
+          env: "",
+          url: ""
+        }
+      });
+    });
+
+    ipcRenderer.on(EVENTS.EDIT_SERVER_ITEM, () => {
+      this.closeModal();
+    });
 
     // 初次进入页面请求一次
     ipcRenderer.send(EVENTS.GET_PROJECT_BY_ID, this.props.match.params.id);
@@ -113,7 +152,7 @@ class Project extends Component {
 
     const serverItem = this.state.serverItem;
 
-    const { modalVisible } = this.state;
+    const { modalVisible, isEditServer } = this.state;
 
     const isServersArray = Array.isArray(servers);
 
@@ -154,7 +193,17 @@ class Project extends Component {
           </Col>
         </Row>
         {isServersArray &&
-          servers.map((item, index) => <ServerBar key={index} {...item} appid={appid} />)}
+          servers.map((item, index) => (
+            <ServerBar
+              key={index}
+              {...item}
+              appid={appid}
+              editFn={this.openModal.bind(this, {
+                mode: "edit",
+                ...item
+              })}
+            />
+          ))}
         <div className="allMidBox mt20">
           <Icon
             type="plus-circle"
@@ -162,11 +211,12 @@ class Project extends Component {
             className="add-btn"
             onClick={this.openModal}
           />
+
           <p className="t5 w3 c2 mt5">Add Server Config</p>
         </div>
 
         <Modal
-          title="Add Your Service"
+          title={isEditServer ? "Edit Your Service" : "Add Your Service"}
           visible={modalVisible}
           onOk={this.addServer}
           onCancel={this.closeModal}
@@ -175,6 +225,7 @@ class Project extends Component {
             <Input
               prefix={<Icon type="gold" style={{ color: "rgba(0,0,0,.25)" }} />}
               type="text"
+              disabled={isEditServer}
               value={serverItem.env}
               onChange={this.inputHandler.bind(this, "env")}
               placeholder="Custom Environment, example: 'local'"

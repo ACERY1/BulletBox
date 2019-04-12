@@ -274,15 +274,19 @@ export class DataBase {
       this.getProjectById(appid)
         .then(project => {
           const servers = project.servers.map(srv => {
-            if (srv.env === env) return (srv = serverItem);
+            if (srv.env === env) {
+              serverItem.updateTime = moment().format("YYYY-MM-DD hh:mm"); //更新编辑时间
+              return srv = serverItem;
+            };
             return srv;
           });
           console.log(servers)
+          project.servers = servers;
           this.db.update(
             { appid: appid },
             {
               $set: {
-                servers: servers
+                servers: servers,
               }
             },
             {
@@ -290,7 +294,7 @@ export class DataBase {
             },
             err => {
               if (err) reject(err);
-              resolve();
+              resolve(project);
             }
           );
         })

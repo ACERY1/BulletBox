@@ -110,12 +110,25 @@ export default wins => {
     try {
       const project = await DB.removeServerItemById(appid, env);
       toast.success("删除服务端配置成功");
-      mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project)
+      // mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project)
+      evt.sender.send(EVENTS.ADD_SERVER_ITEM);
     } catch (error) {
       console.log(error);
       toast("删除服务器配置失败");
     }
   });
+
+ipcMain.on(EVENTS.EDIT_SERVER_ITEM, async (evt, {appid, env, serverItem} ) => {
+  try {
+    const project = await DB.editServerItemById(appid, env, serverItem);
+    toast.success("编辑成功");
+    mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project)
+    evt.sender.send(EVENTS.EDIT_SERVER_ITEM)
+  } catch (error) {
+    console.log(error);
+    toast("编辑服务器配置失败");
+  }
+})
 
   ipcMain.on(EVENTS.FILE_UPLOAD, async (event, arg) => {
     // let p = new Project('hello', '#3333', {}, '/srv');

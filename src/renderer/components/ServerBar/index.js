@@ -5,8 +5,6 @@ import * as EVENTS from '../../../shared/events';
 const { ipcRenderer } = window.electron;
 class ServerBar extends Component {
 
-  edit = () => {}
-
   remove = () => {
     ipcRenderer.send(EVENTS.REMOVE_SERVER_ITEM_BY_ENV, {
       appid: this.props.appid,
@@ -39,7 +37,7 @@ class ServerBar extends Component {
             <Row>
               <Col span={14}>
                 <div className="colBox">
-                  <p className="t2 w1 c1 mb5">{env.toUpperCase()}</p>
+                  <p className="t1 w1 c1 mb5">{env}</p>
                   <p className="t3 w2 c1 mb10">{url}</p>
                   <p className="t4 w3 c2">path: {path}</p>
                 </div>
@@ -69,6 +67,7 @@ class ServerBar extends Component {
                   className="mr10"
                   size="small"
                   icon="edit"
+                  onClick={this.props.editFn}
                 >
                   Edit
                 </Button>
