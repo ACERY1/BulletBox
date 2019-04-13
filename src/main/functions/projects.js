@@ -45,7 +45,7 @@ export class Project {
     this.desc = desc;
     // update create time 该参数内置 不用传
     this.updateTime = moment().format("YYYY-MM-DD hh:mm");
-    this.status = 0;
+    this.status = 1;
   }
 
   getServerPathByEnv(env) {
@@ -130,15 +130,16 @@ export class DataBase {
       const setObj = {};
       // 支持部分更新属性
       Project.attrs.forEach(attr => {
-        if (project[attr] && attr != "appid") {
+        if (typeof project[attr] != 'undefined' && attr != "appid") {
           setObj[attr] = project[attr];
         }
       });
+      // console.log(setObj)
       // 更新 修改时间
       setObj.updateTime = moment().format("YYYY-MM-DD hh:mm");
       this.db.update(
         {
-          appid: project.appid // 根据appid查询
+          appid: appid // 根据appid查询
         },
         {
           $set: setObj
@@ -276,17 +277,17 @@ export class DataBase {
           const servers = project.servers.map(srv => {
             if (srv.env === env) {
               serverItem.updateTime = moment().format("YYYY-MM-DD hh:mm"); //更新编辑时间
-              return srv = serverItem;
-            };
+              return (srv = serverItem);
+            }
             return srv;
           });
-          console.log(servers)
+          // console.log(servers)
           project.servers = servers;
           this.db.update(
             { appid: appid },
             {
               $set: {
-                servers: servers,
+                servers: servers
               }
             },
             {
@@ -295,6 +296,67 @@ export class DataBase {
             err => {
               if (err) reject(err);
               resolve(project);
+            }
+          );
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  // /**
+  //  * 根据 appid 和 env 获取某项目的单个Server配置
+  //  * @param {String} appid
+  //  * @param {String} targetEnv 环境
+  //  * @returns {Object} project
+  //  */
+  // getServerItemById$Env(appid, targetEnv) {
+  //   return new Promise((resolve, reject) => {
+  //     this.getProjectById(appid)
+  //       .then(project => {
+  //         project.servers.forEach(srv => {
+  //           if (srv.env === targetEnv) {
+  //             resolve(srv);
+  //           }
+  //         });
+  //       })
+  //       .catch(err => reject(err));
+  //   });
+  // }
+  /**
+   * 更改服务配置连接状态
+   * @param {String} appid
+   * @param {String} env
+   * @param {Number}  status 状态码
+   */
+  changeServerStatusById(appid, env, status) {
+    return new Promise((resolve, reject) => {
+      this.getProjectById(appid)
+        .then(project => {
+          project.servers.forEach(srv => {
+            if (srv.env === env) {
+              srv.status = status;
+              srv.updateTime = moment().format("YYYY-MM-DD hh:mm");
+            }
+          });
+          this.db.update(
+            { appid: appid },
+            {
+              $set: {
+                servers: project.servers
+              }
+            },
+            {
+              multi: false
+            },
+            err => {
+              if (err) reject(err);
+              this.modifyProject(appid, {status})
+                .then(() => {
+                  resolve(project);
+                })
+                .catch(err => {
+                  throw new Error(err)
+                });
             }
           );
         })

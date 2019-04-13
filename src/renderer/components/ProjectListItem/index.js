@@ -27,7 +27,7 @@ class ProjectListItem extends Component {
       name = "bulletbox",
       desc = "transform your code easily",
       updateTime = "ERROR TIME RECORDING",
-      status = 0,
+      status,
       appid = 0,
       path = "/pathError"
     } = this.props.project;

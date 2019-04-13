@@ -1,18 +1,53 @@
 import React, { Component } from "react";
-import { Row, Col, Button, Icon } from "antd";
+import { Row, Col, Button, Icon, message } from "antd";
 import "./index.less";
-import * as EVENTS from '../../../shared/events';
+import * as EVENTS from "../../../shared/events";
+import http from "axios";
 const { ipcRenderer } = window.electron;
 class ServerBar extends Component {
-
   remove = () => {
     ipcRenderer.send(EVENTS.REMOVE_SERVER_ITEM_BY_ENV, {
       appid: this.props.appid,
       env: this.props.env
-    })
-  }
-  
-  
+    });
+  };
+
+  link = () => {
+    const { url, path, appid, env } = this.props;
+    http
+      .get(`${url}/link`, {
+        params: {
+          appid,
+          path
+        }
+      })
+      .then(res => {
+        const { message: msg } = res.data;
+        // secret
+        if (msg === "AABBBBAA") {
+          message.success("连接成功");
+          ipcRenderer.send(EVENTS.CHANGE_SERVER_STATUS, {
+            appid,
+            env,
+            status: 0
+          });
+        } else {
+          ipcRenderer.send(EVENTS.CHANGE_SERVER_STATUS, {
+            appid,
+            env,
+            status: 1
+          });
+        }
+      })
+      .catch(err => {
+        message.error("连接失败，请检查URL");
+        ipcRenderer.send(EVENTS.CHANGE_SERVER_STATUS, {
+          appid,
+          env,
+          status: 1
+        });
+      });
+  };
 
   render() {
     const {
@@ -52,7 +87,12 @@ class ServerBar extends Component {
           <Col span={6}>
             <Row justify="center">
               <Col span={24}>
-                <Button type="primary" className="mr10" icon="link">
+                <Button
+                  type="primary"
+                  className="mr10"
+                  icon="link"
+                  onClick={this.link}
+                >
                   Link
                 </Button>
                 <Button type="primary" icon="upload">
@@ -71,7 +111,12 @@ class ServerBar extends Component {
                 >
                   Edit
                 </Button>
-                <Button type="danger" size="small" icon="delete" onClick={this.remove}>
+                <Button
+                  type="danger"
+                  size="small"
+                  icon="delete"
+                  onClick={this.remove}
+                >
                   Delete
                 </Button>
               </Col>
@@ -90,12 +135,12 @@ class ServerBar extends Component {
                 </div>
               ) : (
                 <div>
-                <Icon
-                type="check-circle"
-                theme="filled"
-                className="server-status success"
-              />
-              <p className="t5 c1 w2 mt10 t_center">Success</p>
+                  <Icon
+                    type="check-circle"
+                    theme="filled"
+                    className="server-status success"
+                  />
+                  <p className="t5 c1 w2 mt10 t_center">Success</p>
                 </div>
               )}
             </div>

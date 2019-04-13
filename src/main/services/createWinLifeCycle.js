@@ -45,8 +45,8 @@ export default wins => {
       toast.success("新建项目成功！");
 
       // FIXME: debug用查看所有项目
-      const projects = await DB.getAllProjects();
-      console.log(projects);
+      // const projects = await DB.getAllProjects();
+      // console.log(projects);
     } catch (err) {
       console.log("新建项目失败", err);
       toast.error("新建项目失败");
@@ -118,17 +118,32 @@ export default wins => {
     }
   });
 
-ipcMain.on(EVENTS.EDIT_SERVER_ITEM, async (evt, {appid, env, serverItem} ) => {
-  try {
-    const project = await DB.editServerItemById(appid, env, serverItem);
-    toast.success("编辑成功");
-    mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project)
-    evt.sender.send(EVENTS.EDIT_SERVER_ITEM)
-  } catch (error) {
-    console.log(error);
-    toast("编辑服务器配置失败");
-  }
-})
+  ipcMain.on(
+    EVENTS.EDIT_SERVER_ITEM,
+    async (evt, { appid, env, serverItem }) => {
+      try {
+        const project = await DB.editServerItemById(appid, env, serverItem);
+        toast.success("编辑成功");
+        mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project);
+        evt.sender.send(EVENTS.EDIT_SERVER_ITEM);
+      } catch (error) {
+        console.log(error);
+        toast("编辑服务器配置失败");
+      }
+    }
+  );
+
+  ipcMain.on(EVENTS.CHANGE_SERVER_STATUS, async (evt, { appid, env, status }) => {
+    try {
+      const project = await DB.changeServerStatusById(appid, env, status);
+      mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project);
+      const projects = await DB.getAllProjects();
+      mainWin.webContents.send(EVENTS.GET_ALL_PROJECTS, projects);     
+    } catch (err) {
+      console.log(err);
+      toast("更改服务器状态失败");
+    }
+  });
 
   ipcMain.on(EVENTS.FILE_UPLOAD, async (event, arg) => {
     // let p = new Project('hello', '#3333', {}, '/srv');

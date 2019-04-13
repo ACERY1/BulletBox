@@ -138,6 +138,8 @@ class Project extends Component {
   componentWillUnmount() {
     ipcRenderer.removeAllListeners(EVENTS.GET_PROJECT_BY_ID);
     ipcRenderer.removeAllListeners(EVENTS.DELETE_PROJECT);
+    ipcRenderer.removeAllListeners(EVENTS.ADD_SERVER_ITEM);
+    ipcRenderer.removeAllListeners(EVENTS.EDIT_SERVER_ITEM);
   }
 
   render() {
