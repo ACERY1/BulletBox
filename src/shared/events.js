@@ -28,7 +28,8 @@ export const DELETE_PROJECT = "DELETE_PROJECT";
 export const ADD_SERVER_ITEM = "ADD_SERVER_ITEM"; // 在项目里添加服务配置
 export const REMOVE_SERVER_ITEM_BY_ENV = "REMOVE_SERVER_ITEM_BY_ENV"; // 通过环境变量移除单个服务配置
 export const EDIT_SERVER_ITEM = "EDIT_SERVER_ITEM"; // 编辑服务配置
-export const CHANGE_SERVER_STATUS = "CHANGE_SERVER_STATUS"
+export const CHANGE_SERVER_STATUS = "CHANGE_SERVER_STATUS"; // 更改服务器状态
+
 
 // 弹框通知
 export const TOAST_MESSAGE = "TOAST_MESSAGE"; 

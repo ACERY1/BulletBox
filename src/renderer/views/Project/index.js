@@ -95,8 +95,6 @@ class Project extends Component {
         url: "",
         suffix: []
       }
-    }, () => {
-      console.log(this.state)
     });
   };
 
@@ -228,6 +226,7 @@ class Project extends Component {
               key={index}
               {...item}
               appid={appid}
+              projectPath={path}
               editFn={this.openModal.bind(this, {
                 mode: "edit",
                 ...item

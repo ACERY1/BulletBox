@@ -27,6 +27,34 @@ const parseURL = (url, opt) => {
   return opt;
 };
 
+/**
+ * 得到指定目录下指定文件后缀的所有文件组成的数组
+ * @param {String} 指定目录
+ * @param {Array} 后缀 example： ['.js', '.css']
+ * @returns {Array} example: ['/srv/hello.js', '/srv/test.js']
+ */
+export const getFilesArray = (dirPath, suffix) => {
+  let jsonFiles = [];
+
+  function findFile(dpath) {
+    let files = fs.readdirSync(dpath);
+    files.forEach(function(item, index) {
+      let fPath = path.join(dpath, item);
+      let stat = fs.statSync(fPath);
+      if (stat.isDirectory() === true) {
+        findFile(fPath);
+      }
+      if (stat.isFile() === true) {
+        if (suffix instanceof Array && suffix.includes(path.extname(item))) {
+          jsonFiles.push(fPath);
+        }
+      }
+    });
+  }
+  findFile(dirPath);
+  return jsonFiles;
+};
+
 export const read = () => {
   dialog.showOpenDialog(
     { properties: ["openFile", "openDirectory"] },
@@ -153,4 +181,13 @@ export const selectPath = () => {
       }
     );
   });
+};
+
+/**
+ * 上传多个文件
+ * @param {Array} paths 文件路径数组
+ */
+export const uploadFiles = (url, paths) => {
+  const boundaryKey = Math.random().toString(16);
+  const endData = "\r\n----" + boundaryKey + "--";
 };

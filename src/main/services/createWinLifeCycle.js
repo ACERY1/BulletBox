@@ -5,7 +5,7 @@ import * as EVENTS from "../../shared/events";
 import Toast from "../functions/Toast";
 
 import { Project, DataBase } from "../functions/projects";
-import { selectPath } from "../functions/files";
+import { selectPath, getFilesArray } from "../functions/files";
 
 export default wins => {
   // 创建窗口
@@ -133,19 +133,22 @@ export default wins => {
     }
   );
 
-  ipcMain.on(EVENTS.CHANGE_SERVER_STATUS, async (evt, { appid, env, status }) => {
-    try {
-      const project = await DB.changeServerStatusById(appid, env, status);
-      mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project);
-      const projects = await DB.getAllProjects();
-      mainWin.webContents.send(EVENTS.GET_ALL_PROJECTS, projects);     
-    } catch (err) {
-      console.log(err);
-      toast("更改服务器状态失败");
+  ipcMain.on(
+    EVENTS.CHANGE_SERVER_STATUS,
+    async (evt, { appid, env, status }) => {
+      try {
+        const project = await DB.changeServerStatusById(appid, env, status);
+        mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project);
+        const projects = await DB.getAllProjects();
+        mainWin.webContents.send(EVENTS.GET_ALL_PROJECTS, projects);
+      } catch (err) {
+        console.log(err);
+        toast("更改服务器状态失败");
+      }
     }
-  });
+  );
 
-  ipcMain.on(EVENTS.FILE_UPLOAD, async (event, arg) => {
+  ipcMain.on(EVENTS.FILE_UPLOAD, async (event, args) => {
     // let p = new Project('hello', '#3333', {}, '/srv');
 
     // read();
@@ -161,9 +164,12 @@ export default wins => {
 
     // mainWin.webContents.send(EVENTS.TOAST_MESSAGE, 'd?')
 
-    toast.success("成功！");
-    toast.info("信息");
-    toast.error("出错");
-    toast.warn("警告");
+    // toast.success("成功！");
+    // toast.info("信息");
+    // toast.error("出错");
+    // toast.warn("警告");
+    const { url, path, projectPath, suffix } = args;
+    const filesArray = await getFilesArray(projectPath, suffix);
+    // console.log(filesArray);
   });
 };

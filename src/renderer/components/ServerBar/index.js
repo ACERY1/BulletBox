@@ -13,6 +13,21 @@ class ServerBar extends Component {
     });
   };
 
+  /**部署 */
+  deploy = () => {
+    /**
+     * 1. 根据projectPath和suffix获取到目录下要上传的所有文件
+     * 2. 根据url和path上传文件
+     */
+    const {url, path, appid, suffix, projectPath} = this.props
+    ipcRenderer.send(EVENTS.FILE_UPLOAD, {
+      url,
+      path,
+      projectPath,
+      suffix
+    })
+  }
+
   link = () => {
     const { url, path, appid, env } = this.props;
     http
@@ -105,7 +120,7 @@ class ServerBar extends Component {
                 >
                   Link
                 </Button>
-                <Button type="primary" icon="upload">
+                <Button type="primary" icon="upload" onClick={this.deploy}>
                   Deploy
                 </Button>
               </Col>
