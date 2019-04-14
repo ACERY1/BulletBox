@@ -84,8 +84,13 @@ class ServerBar extends Component {
                 <p className="t5 w2 c2 mb5">{updateTime}</p>
                 <p className="t5 w3 c2 mb10">version: {version}</p>
                 {suffix.map((i, idex) => (
-                  <Tag color={colors[idex % colors.length]} key={idex}>{i}</Tag>
+                  <Tag color={colors[idex % colors.length]} key={idex}>
+                    {i}
+                  </Tag>
                 ))}
+                {suffix.length === 0 ? (
+                  <p className="t5 w2 c2 mb5">All Files</p>
+                ) : null}
               </Col>
             </Row>
           </Col>

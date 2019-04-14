@@ -284,6 +284,7 @@ class Project extends Component {
             />
           </div>
           <div className="mt10">
+            <p className="mb5 t5 c2 w4">suffix examples: '.html', '.js', '.css'</p>
             <TagInput suffix={serverItem.suffix} dataCB={this.handleSuffix} />
           </div>
         </Modal>

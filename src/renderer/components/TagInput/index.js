@@ -46,13 +46,13 @@ class TagInput extends React.Component {
 
   componentDidMount() {
     this.setState({
-      tags: this.props.suffix || [".js", ".html", ".css"]
+      tags: this.props.suffix || ["*"]
     });
   }
 
   componentWillReceiveProps(p) {
     this.setState({
-      tags: p.suffix || [".js", ".html", ".css"]
+      tags: p.suffix || ["*"]
     });
   }
 
