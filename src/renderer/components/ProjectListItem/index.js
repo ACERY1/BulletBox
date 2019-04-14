@@ -13,13 +13,12 @@ class ProjectListItem extends Component {
   goProject = () => {
     const {history} = this.props
     const appid = this.props.project.appid
-    // FIXME:判断路由的方式有点hack
-    if(history.location.pathname.indexOf('project') === -1) {
+    // if(history.location.pathname.indexOf('project') === -1) {
       history.push(`/project/${appid}`)
-    } else {
+    // } else {
       // 非第一次进入页面请求刷新数据
-      ipcRenderer.send(Events.GET_PROJECT_BY_ID, appid)
-    }
+      // ipcRenderer.send(Events.GET_PROJECT_BY_ID, appid)
+    // }
   }
 
   render() {

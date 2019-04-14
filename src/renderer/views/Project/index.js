@@ -2,8 +2,19 @@ import React, { Component } from "react";
 import "./index.less";
 import * as EVENTS from "../../../shared/events";
 import { withRouter } from "react-router";
-import { message, Row, Col, Button, Icon, Modal, Input } from "antd";
+import {
+  message,
+  Row,
+  Col,
+  Button,
+  Icon,
+  Modal,
+  Input,
+  Tag,
+  Tooltip
+} from "antd";
 import ServerBar from "@components/ServerBar";
+import TagInput from "@components/TagInput";
 
 import logo from "@assets/logo.png";
 const { ipcRenderer } = window.electron;
@@ -25,7 +36,8 @@ class Project extends Component {
       serverItem: {
         path: "",
         url: "",
-        env: ""
+        env: "",
+        suffix: []
       }
     };
   }
@@ -60,6 +72,7 @@ class Project extends Component {
       serverItem.path = env.path;
       serverItem.url = env.url;
       serverItem.env = env.env;
+      serverItem.suffix = env.suffix;
       this.setState({
         modalVisible: true,
         isEditServer: true, // 服务器配置编辑模式
@@ -79,11 +92,20 @@ class Project extends Component {
       serverItem: {
         path: "",
         env: "",
-        url: ""
+        url: "",
+        suffix: []
       }
+    }, () => {
+      console.log(this.state)
     });
   };
 
+  handleSuffix = suffix => {
+    const serverItem = Object.assign({}, this.state.serverItem, { suffix });
+    this.setState({
+      serverItem
+    });
+  };
   inputHandler = (valName, evt) => {
     let val = evt.target.value;
     let data = Object.assign({}, this.state.serverItem, {
@@ -122,7 +144,8 @@ class Project extends Component {
         serverItem: {
           path: "",
           env: "",
-          url: ""
+          url: "",
+          suffix: [],
         }
       });
     });
@@ -140,6 +163,11 @@ class Project extends Component {
     ipcRenderer.removeAllListeners(EVENTS.DELETE_PROJECT);
     ipcRenderer.removeAllListeners(EVENTS.ADD_SERVER_ITEM);
     ipcRenderer.removeAllListeners(EVENTS.EDIT_SERVER_ITEM);
+  }
+
+  // 当路由只更新路由参数的时候需要更新同一页面的数据
+  componentWillReceiveProps(nextProps) {
+    ipcRenderer.send(EVENTS.GET_PROJECT_BY_ID, nextProps.match.params.id);
   }
 
   render() {
@@ -254,6 +282,9 @@ class Project extends Component {
               className="mt10"
               onChange={this.inputHandler.bind(this, "path")}
             />
+          </div>
+          <div className="mt10">
+            <TagInput suffix={serverItem.suffix} dataCB={this.handleSuffix} />
           </div>
         </Modal>
       </div>

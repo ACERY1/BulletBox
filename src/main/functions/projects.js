@@ -62,7 +62,7 @@ export class Project {
  * Server Entity
  */
 export class Server {
-  constructor({ env, url, path }) {
+  constructor({ env, url, path, suffix }) {
     if (!env || !url || !path) {
       throw new Error("constructor Server 缺少参数");
     }
@@ -71,6 +71,7 @@ export class Server {
     this.path = path;
     this.updateTime = moment().format("YYYY-MM-DD hh:mm");
     this.status = 1;
+    this.suffix = suffix || []; // 文件后缀
   }
 }
 

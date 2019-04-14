@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Row, Col, Button, Icon, message } from "antd";
+import { Row, Col, Button, Icon, message, Tag } from "antd";
 import "./index.less";
 import * as EVENTS from "../../../shared/events";
 import http from "axios";
 const { ipcRenderer } = window.electron;
+const colors = ["magenta", "red", "volcano", "orange", "gold", "green", "cyan"];
 class ServerBar extends Component {
   remove = () => {
     ipcRenderer.send(EVENTS.REMOVE_SERVER_ITEM_BY_ENV, {
@@ -57,7 +58,8 @@ class ServerBar extends Component {
       status = 1,
       version = "*.*.*",
       updateTime = "YYYY-MM-DD hh:mm",
-      appid
+      appid,
+      suffix = [".js", ".css", ".html"] // * means all files
     } = this.props;
 
     return (
@@ -80,7 +82,10 @@ class ServerBar extends Component {
               <Col span={10}>
                 <p className="t5 w1 c1 mb5">Last Modify Time</p>
                 <p className="t5 w2 c2 mb5">{updateTime}</p>
-                <p className="t5 w3 c2">version: {version}</p>
+                <p className="t5 w3 c2 mb10">version: {version}</p>
+                {suffix.map((i, idex) => (
+                  <Tag color={colors[idex % colors.length]} key={idex}>{i}</Tag>
+                ))}
               </Col>
             </Row>
           </Col>
