@@ -106,6 +106,7 @@ export const upload = (url, filePath, fileName, size, opt = {}) => {
     '"' +
     endl +
     "Content-Transfer-Encoding: binary\r\n\r\n";
+
   const endCode = endl + "--" + boundary + "--";
 
   // // config http option
@@ -185,9 +186,93 @@ export const selectPath = () => {
 
 /**
  * 上传多个文件
+ * @param {String} url 上传的url
  * @param {Array} paths 文件路径数组
+ * @param {Object} postData 想要一起同时上传的k-v
+ * @param {Objcet} opt 配置http
  */
-export const uploadFiles = (url, paths) => {
+export const uploadFiles = (url, paths, postData, opt) => {
   const boundaryKey = Math.random().toString(16);
-  const endData = "\r\n----" + boundaryKey + "--";
+  const endCode = "\r\n----" + boundaryKey + "--";
+  const filePayloads = [];
+  let content = "";
+  let fileLength = 0;
+
+  Object.keys(postData).forEach(key => {
+    let arr = ["\r\n----" + boundaryKey + "\r\n"];
+    arr.push('Content-Disposition: form-data; name="' + key + '"\r\n\r\n');
+    arr.push(postData[key]);
+    content += arr.join(); // 组装数据
+    fileLength += Buffer.byteLength(content); // 计算postData所占长度
+  });
+
+  paths.forEach(filePath => {
+    // 添加payload、记录长度
+    const payLoad =
+      "\r\n----" +
+      boundaryKey +
+      "\r\n" +
+      "Content-Type: application/octet-stream\r\n" +
+      'Content-Disposition: form-data; name="file"; ' + // name 字段和input上的name属性关联
+      'filename="' +
+      path.basename(filePath) +
+      '"; \r\n' +
+      "Content-Transfer-Encoding: binary\r\n\r\n";
+    // content += payLoad;
+    filePayloads.push(payLoad);
+    fileLength += Buffer.byteLength(payLoad) + fs.statSync(filePath).size;
+  });
+
+  opt.method = "POST";
+
+  opt.headers = Object.assign(
+    {
+      "Content-Type": "multipart/form-data; boundary=--" + boundaryKey,
+      "Content-Length": fileLength + Buffer.byteLength(endCode)
+    },
+    opt.headers || {}
+  );
+
+  opt = parseURL(url, opt);
+
+  return new Promise((resolve, reject) => {
+    const req = http.request(opt, res => {
+      var status = res.statusCode;
+      var body = "";
+      res
+        .on("data", function(chunk) {
+          body += chunk;
+        })
+        .on("end", function() {
+          if ((status >= 200 && status < 300) || status === 304) {
+            resolve(body);
+          } else {
+            reject(status);
+          }
+        })
+        .on("error", function(err) {
+          reject(err.message || err);
+        });
+    });
+    // 请求失败
+    req.on("error", function(err) {
+      reject(err.message || err);
+    });
+
+    paths.forEach((filePath, index) => {
+      req.write(filePayloads[index]);
+      const fileStream = fs.createReadStream(filePath, {
+        bufferSize: 2 * 1024
+      });
+      fileStream.pipe(
+        req,
+        { end: false }
+      );
+      fileStream.on("end", () => {
+        if (index === paths.length - 1) {
+          req.end(endCode); // 写入结束行
+        }
+      });
+    });
+  });
 };

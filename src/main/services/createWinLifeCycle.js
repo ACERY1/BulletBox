@@ -3,9 +3,10 @@ import { ipcMain } from "electron";
 import createMainWindow from "../windows/createMainWindow";
 import * as EVENTS from "../../shared/events";
 import Toast from "../functions/Toast";
+import urlUtil from 'url';
 
 import { Project, DataBase } from "../functions/projects";
-import { selectPath, getFilesArray } from "../functions/files";
+import { selectPath, getFilesArray, uploadFiles } from "../functions/files";
 
 export default wins => {
   // 创建窗口
@@ -169,7 +170,13 @@ export default wins => {
     // toast.error("出错");
     // toast.warn("警告");
     const { url, path, projectPath, suffix } = args;
-    const filesArray = await getFilesArray(projectPath, suffix);
-    // console.log(filesArray);
+    try {
+      const filesArray = await getFilesArray(projectPath, suffix);
+      console.log(filesArray);
+      uploadFiles(urlUtil.resolve(url, '/project/update'), filesArray, {}, {})
+    } catch (error) {
+      console.log(error)
+    }
+
   });
 };
