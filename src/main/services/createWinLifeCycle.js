@@ -173,7 +173,7 @@ export default wins => {
     try {
       const filesArray = await getFilesArray(projectPath, suffix);
       console.log(filesArray);
-      uploadFiles(urlUtil.resolve(url, '/project/update'), filesArray, {}, {})
+      uploadFiles(urlUtil.resolve(url, '/project/update'), filesArray, {}, {}, projectPath)
     } catch (error) {
       console.log(error)
     }

@@ -190,16 +190,17 @@ export const selectPath = () => {
  * @param {Array} paths 文件路径数组
  * @param {Object} postData 想要一起同时上传的k-v
  * @param {Objcet} opt 配置http
+ * @param {String} projectPath 服务器配置路径
  */
-export const uploadFiles = (url, paths, postData, opt) => {
+export const uploadFiles = (url, paths, postData, opt, projectPath) => {
   const boundaryKey = Math.random().toString(16);
-  const endCode = "\r\n----" + boundaryKey + "--";
+  const endCode = "\r\n--" + boundaryKey + "--";
   const filePayloads = [];
   let content = "";
   let fileLength = 0;
 
   Object.keys(postData).forEach(key => {
-    let arr = ["\r\n----" + boundaryKey + "\r\n"];
+    let arr = ["\r\n--" + boundaryKey + "\r\n"];
     arr.push('Content-Disposition: form-data; name="' + key + '"\r\n\r\n');
     arr.push(postData[key]);
     content += arr.join(); // 组装数据
@@ -209,11 +210,11 @@ export const uploadFiles = (url, paths, postData, opt) => {
   paths.forEach(filePath => {
     // 添加payload、记录长度
     const payLoad =
-      "\r\n----" +
+      "\r\n--" +
       boundaryKey +
       "\r\n" +
       "Content-Type: application/octet-stream\r\n" +
-      'Content-Disposition: form-data; name="file"; ' + // name 字段和input上的name属性关联
+      `Content-Disposition: form-data; name="${path.relative(projectPath,filePath)}";` + // name 字段和input上的name属性关联
       'filename="' +
       path.basename(filePath) +
       '"; \r\n' +
@@ -227,7 +228,7 @@ export const uploadFiles = (url, paths, postData, opt) => {
 
   opt.headers = Object.assign(
     {
-      "Content-Type": "multipart/form-data; boundary=--" + boundaryKey,
+      "Content-Type": "multipart/form-data;boundary=" + boundaryKey,
       "Content-Length": fileLength + Buffer.byteLength(endCode)
     },
     opt.headers || {}
@@ -260,19 +261,34 @@ export const uploadFiles = (url, paths, postData, opt) => {
     });
 
     paths.forEach((filePath, index) => {
+      console.log(filePayloads[index])
       req.write(filePayloads[index]);
-      const fileStream = fs.createReadStream(filePath, {
-        bufferSize: 2 * 1024
-      });
-      fileStream.pipe(
-        req,
-        { end: false }
-      );
-      fileStream.on("end", () => {
+      let data =  fs.readFileSync(filePath)
+      console.log(data)
+      req.write(data)
+
+      // const fileStream = fs.createReadStream(filePath, {
+      //   bufferSize: 2 * 1024
+      // });
+
+      // FIXME: pipe是异步的，这里不等待会造成先写入所有header再写入所有body的情况
+      // fileStream.pipe(
+      //   req,
+      //   { end: false }
+      // );
+
+
+      // fileStream.on("end", () => {
+      //   console.log(index)
         if (index === paths.length - 1) {
+      //     // console.log(req.getHeaders())
           req.end(endCode); // 写入结束行
         }
-      });
+      // });
+
+
+
+
     });
   });
 };
