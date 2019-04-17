@@ -203,7 +203,7 @@ export const uploadFiles = (url, paths, postData, opt, projectPath) => {
     let arr = ["\r\n--" + boundaryKey + "\r\n"];
     arr.push('Content-Disposition: form-data; name="' + key + '"\r\n\r\n');
     arr.push(postData[key]);
-    content += arr.join(); // 组装数据
+    content += arr.join(''); // 组装数据
     fileLength += Buffer.byteLength(content); // 计算postData所占长度
   });
 
@@ -259,6 +259,9 @@ export const uploadFiles = (url, paths, postData, opt, projectPath) => {
     req.on("error", function(err) {
       reject(err.message || err);
     });
+
+    console.log(content)
+    req.write(content)
 
     paths.forEach((filePath, index) => {
       console.log(filePayloads[index])

@@ -73,6 +73,7 @@ class Project extends Component {
       serverItem.url = env.url;
       serverItem.env = env.env;
       serverItem.suffix = env.suffix;
+      serverItem.status = env.status;
       this.setState({
         modalVisible: true,
         isEditServer: true, // 服务器配置编辑模式

@@ -3,7 +3,7 @@ import { ipcMain } from "electron";
 import createMainWindow from "../windows/createMainWindow";
 import * as EVENTS from "../../shared/events";
 import Toast from "../functions/Toast";
-import urlUtil from 'url';
+import urlUtil from "url";
 
 import { Project, DataBase } from "../functions/projects";
 import { selectPath, getFilesArray, uploadFiles } from "../functions/files";
@@ -169,14 +169,29 @@ export default wins => {
     // toast.info("信息");
     // toast.error("出错");
     // toast.warn("警告");
-    const { url, path, projectPath, suffix } = args;
+    const { url, path, projectPath, suffix, appid, env, status } = args;
     try {
-      const filesArray = await getFilesArray(projectPath, suffix);
-      console.log(filesArray);
-      uploadFiles(urlUtil.resolve(url, '/project/update'), filesArray, {}, {}, projectPath)
+      if (status === 1) {
+        return toast.warn("请先测试连接是否成功: click 'link' button");
+      } else {
+        const filesArray = await getFilesArray(projectPath, suffix);
+        console.log(filesArray);
+        uploadFiles(
+          urlUtil.resolve(url, "/project/update"),
+          filesArray,
+          {
+            deployPath: path
+          }, // postData
+          {}, // http opt
+          projectPath
+        );
+        toast.success("上传成功！");
+        await DB.updateModifyTimeById$Env(appid, env);
+        const project = await DB.changeServerStatusById(appid, env, 0); // 成功
+        mainWin.webContents.send(EVENTS.GET_PROJECT_BY_ID, project);
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
   });
 };

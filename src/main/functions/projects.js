@@ -364,6 +364,40 @@ export class DataBase {
         .catch(err => reject(err));
     });
   }
+
+  /**
+   * 更新modifytime
+   * @param {String} appid
+   * @param {String} env
+   */
+  updateModifyTimeById$Env(appid, env){
+    return new Promise((resolve, reject) => {
+      this.getProjectById(appid)
+      .then(project => {
+        project.servers.forEach(srv => {
+          if (srv.env === env) {
+            srv.updateTime = moment().format("YYYY-MM-DD hh:mm");
+          }
+          this.db.update(
+            { appid: appid },
+            {
+              $set: {
+                servers: project.servers
+              }
+            },
+            {
+              multi: false
+            },
+            err => {
+              if (err) reject(err);
+            }
+          );
+        });
+        
+      })
+      .catch(err => reject(err));
+    })
+  }
 }
 
 // static attribute   // 除去appid之后的属性
