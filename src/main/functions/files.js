@@ -201,7 +201,7 @@ export const uploadFiles = (url, paths, postData, opt, projectPath) => {
 
   Object.keys(postData).forEach(key => {
     let arr = ["\r\n--" + boundaryKey + "\r\n"];
-    arr.push('Content-Disposition: form-data; name="' + key + '"\r\n\r\n');
+    arr.push('Content-Disposition: form-data; name="' + key + '";\r\n\r\n\r\n');
     arr.push(postData[key]);
     content += arr.join(''); // 组装数据
     fileLength += Buffer.byteLength(content); // 计算postData所占长度

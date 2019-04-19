@@ -177,10 +177,10 @@ export default wins => {
         const filesArray = await getFilesArray(projectPath, suffix);
         console.log(filesArray);
         uploadFiles(
-          urlUtil.resolve(url, "/project/update"),
+          urlUtil.resolve(url, `/project/update?path=${encodeURI(path)}`),
           filesArray,
           {
-            deployPath: path
+            // deployPath: path, // FIXME:数据 服务端接收不到
           }, // postData
           {}, // http opt
           projectPath
