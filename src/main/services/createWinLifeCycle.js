@@ -186,6 +186,7 @@ export default wins => {
         return toast.warn("请先测试连接是否成功: click 'link' button");
       } else {
         const filesArray = await getFilesArray(projectPath, suffix);
+        // FIXME: 下面打印所有的文件
         console.log(filesArray);
         uploadFiles(
           urlUtil.resolve(url, `/project/update?path=${encodeURI(path)}`),

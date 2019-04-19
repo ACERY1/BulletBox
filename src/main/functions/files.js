@@ -3,7 +3,10 @@ import fs from "fs";
 import http from "http";
 import URL from "url";
 import { dialog } from "electron";
+import debug from 'debug';
 import path from "path";
+
+const uploadDEBUG = debug('upload')
 
 /**
  * private
@@ -45,7 +48,7 @@ export const getFilesArray = (dirPath, suffix) => {
         findFile(fPath);
       }
       if (stat.isFile() === true) {
-        if (suffix instanceof Array && suffix.includes(path.extname(item))) {
+        if (suffix instanceof Array && suffix.includes(path.extname(item)) || suffix.length === 0) {
           jsonFiles.push(fPath);
         }
       }
@@ -74,7 +77,7 @@ export const read = () => {
           path.basename(paths[0]),
           stats.size
         ).then(data => {
-          console.log(data);
+          uploadDEBUG(data);
         });
       });
     }
@@ -260,14 +263,14 @@ export const uploadFiles = (url, paths, postData, opt, projectPath) => {
       reject(err.message || err);
     });
 
-    console.log(content)
+    uploadDEBUG(content)
     req.write(content)
 
     paths.forEach((filePath, index) => {
-      console.log(filePayloads[index])
+      uploadDEBUG(filePayloads[index])
       req.write(filePayloads[index]);
       let data =  fs.readFileSync(filePath)
-      console.log(data)
+      uploadDEBUG(data)
       req.write(data)
 
       // const fileStream = fs.createReadStream(filePath, {
@@ -282,9 +285,9 @@ export const uploadFiles = (url, paths, postData, opt, projectPath) => {
 
 
       // fileStream.on("end", () => {
-      //   console.log(index)
+      //   uploadDEBUG(index)
         if (index === paths.length - 1) {
-      //     // console.log(req.getHeaders())
+      //     // uploadDEBUG(req.getHeaders())
           req.end(endCode); // 写入结束行
         }
       // });

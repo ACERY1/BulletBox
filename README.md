@@ -35,3 +35,8 @@ TODO:
 8. 版本号设计
 9. 文件夹复制  [done]
 10. 传输文件的同时上传部分form-data参数 [done] hack的方法：直接用了url参数
+
+
+### DEBUG运行参数值释义
+
+* DEBUG=uplooad 调试上传文件模块
