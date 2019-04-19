@@ -33,9 +33,6 @@ class ServerBar extends Component {
 
   openURL = () => {
     const {url, path, entry} = this.props;
-    console.log(url)
-    console.log(path)
-    console.log(entry)
     ipcRenderer.send(EVENTS.OPEN_TEST_WINDOW, {url, path, entry})
   }
 

@@ -154,7 +154,6 @@ export default wins => {
     console.log(url)
     wins.test = new BrowserWindow({ width: 1000, height: 800 });
     console.log('打开网站：', url + pathUtil.join('/webapp', path, entry))
-    // console.log('打开网站：', urlUtil.f)
     wins.test.loadURL(url + pathUtil.join('/webapp', path, entry));
     wins.test.on("close", function() {
       wins.test = null;
