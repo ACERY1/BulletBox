@@ -37,7 +37,8 @@ class Project extends Component {
         path: "",
         url: "",
         env: "",
-        suffix: []
+        suffix: [],
+        entry: ''
       }
     };
   }
@@ -74,6 +75,7 @@ class Project extends Component {
       serverItem.env = env.env;
       serverItem.suffix = env.suffix;
       serverItem.status = env.status;
+      serverItem.entry = env.entry;
       this.setState({
         modalVisible: true,
         isEditServer: true, // 服务器配置编辑模式
@@ -94,7 +96,8 @@ class Project extends Component {
         path: "",
         env: "",
         url: "",
-        suffix: []
+        suffix: [],
+        entry: '',
       }
     });
   };
@@ -145,6 +148,7 @@ class Project extends Component {
           env: "",
           url: "",
           suffix: [],
+          entry: '',
         }
       });
     });
@@ -283,6 +287,16 @@ class Project extends Component {
               onChange={this.inputHandler.bind(this, "path")}
             />
           </div>
+          <div className="mb10">
+          <Input
+            prefix={<Icon type="file" style={{ color: "rgba(0,0,0,.25)" }} />}
+            type="text"
+            value={serverItem.entry}
+            placeholder="Project Entry, example: 'index.html'"
+            className="mt10"
+            onChange={this.inputHandler.bind(this, "entry")}
+          />
+        </div>
           <div className="mt10">
             <p className="mb5 t5 c2 w4">suffix examples: '.html', '.js', '.css'</p>
             <TagInput suffix={serverItem.suffix} dataCB={this.handleSuffix} />

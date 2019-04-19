@@ -8,6 +8,7 @@ import * as services from './services/index.js';
 // 支持多窗口，目前只有main窗口
 let wins = {
   main: null,
+  test: null, // 测试预览时开的窗口
 };
 
 

@@ -30,6 +30,8 @@ export const REMOVE_SERVER_ITEM_BY_ENV = "REMOVE_SERVER_ITEM_BY_ENV"; // 通过�
 export const EDIT_SERVER_ITEM = "EDIT_SERVER_ITEM"; // 编辑服务配置
 export const CHANGE_SERVER_STATUS = "CHANGE_SERVER_STATUS"; // 更改服务器状态
 
+// 窗口相关
+export const OPEN_TEST_WINDOW = "OPEN_TEST_WINDOW"; // 打开测试用窗口
 
 // 弹框通知
 export const TOAST_MESSAGE = "TOAST_MESSAGE"; 

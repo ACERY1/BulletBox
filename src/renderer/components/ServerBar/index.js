@@ -19,7 +19,7 @@ class ServerBar extends Component {
      * 1. 根据projectPath和suffix获取到目录下要上传的所有文件
      * 2. 根据url和path上传文件
      */
-    const {url, path, appid, suffix, projectPath, env, status} = this.props
+    const { url, path, appid, suffix, projectPath, env, status } = this.props;
     ipcRenderer.send(EVENTS.FILE_UPLOAD, {
       url,
       path,
@@ -27,8 +27,16 @@ class ServerBar extends Component {
       suffix,
       appid,
       env,
-       status
-    })
+      status
+    });
+  };
+
+  openURL = () => {
+    const {url, path, entry} = this.props;
+    console.log(url)
+    console.log(path)
+    console.log(entry)
+    ipcRenderer.send(EVENTS.OPEN_TEST_WINDOW, {url, path, entry})
   }
 
   link = () => {
@@ -77,6 +85,7 @@ class ServerBar extends Component {
       version = "*.*.*",
       updateTime = "YYYY-MM-DD hh:mm",
       appid,
+      entry,
       suffix = [".js", ".css", ".html"] // * means all files
     } = this.props;
 
@@ -101,6 +110,7 @@ class ServerBar extends Component {
                 <p className="t5 w1 c1 mb5">Last Modify Time</p>
                 <p className="t5 w2 c2 mb5">{updateTime}</p>
                 <p className="t5 w3 c2 mb10">version: {version}</p>
+                <p className="t5 w3 c2 mb10">entry: {entry}</p>
                 {suffix.map((i, idex) => (
                   <Tag color={colors[idex % colors.length]} key={idex}>
                     {i}
@@ -130,6 +140,15 @@ class ServerBar extends Component {
             </Row>
             <Row className="mt10">
               <Col span={24}>
+                <Button
+                  type="primary"
+                  className="mr10"
+                  size="small"
+                  icon="cloud"
+                  onClick={this.openURL}
+                >
+                  Open
+                </Button>
                 <Button
                   type="primary"
                   className="mr10"

@@ -1,9 +1,10 @@
 // 主进程提供的服务，它的下层是functions
-import { ipcMain } from "electron";
+import { ipcMain, BrowserWindow } from "electron";
 import createMainWindow from "../windows/createMainWindow";
 import * as EVENTS from "../../shared/events";
 import Toast from "../functions/Toast";
 import urlUtil from "url";
+import pathUtil from 'path';
 
 import { Project, DataBase } from "../functions/projects";
 import { selectPath, getFilesArray, uploadFiles } from "../functions/files";
@@ -148,6 +149,17 @@ export default wins => {
       }
     }
   );
+
+  ipcMain.on(EVENTS.OPEN_TEST_WINDOW, async (evt, {path, url, entry}) => {
+    console.log(url)
+    wins.test = new BrowserWindow({ width: 1000, height: 800 });
+    console.log('打开网站：', url + pathUtil.join('/webapp', path, entry))
+    // console.log('打开网站：', urlUtil.f)
+    wins.test.loadURL(url + pathUtil.join('/webapp', path, entry));
+    wins.test.on("close", function() {
+      wins.test = null;
+    });
+  });
 
   ipcMain.on(EVENTS.FILE_UPLOAD, async (event, args) => {
     // let p = new Project('hello', '#3333', {}, '/srv');
